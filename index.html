@@ -1622,9 +1622,12 @@ function renderAll(){
   const m=D.m||SAMPLE.m,r=D.r||SAMPLE.r,p=D.p||SAMPLE.p,b=D.b||SAMPLE.b;
   renderOverview(m,r,p);
   renderPortfolio(m,p);
-  renderSignals(r);
+  // renderSignals deferred — called by nav() when Pipeline tab is shown (Plotly needs visible container)
   renderTrack(b);
   renderCoverage().catch(()=>{});
+  // If Pipeline is currently active, render signals now
+  const activePg=document.querySelector('.page.active');
+  if(activePg&&activePg.id==='page-signals'){setTimeout(()=>renderSignals(r),100);}
 }
 
 /* ─ REGIME HELPERS ────────────────────────────────────────────────── */
@@ -3061,7 +3064,7 @@ function nav(name,btn){
     if(name==='track')renderTrack(D.b||SAMPLE.b);
     if(name==='coverage')renderCoverage().catch(()=>{});
     if(name==='overview')initParticles();
-    if(name==='signals'){setTimeout(()=>renderSignals(D.r||SAMPLE.r),100);}
+    if(name==='signals'){setTimeout(()=>renderSignals(D.r||SAMPLE.r),150);}
   },30);
 }
 
