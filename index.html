@@ -3160,7 +3160,7 @@ function initParticles(){
     const survivesGate=(regime!=='Bear')&&(isBuy||(score>60&&Math.random()<gate*0.3));
 
     // Speed scales with score — high scorers move faster
-    const speed=(0.25+score/100*0.9)*(W/900);
+    const speed=(0.8+score/100*2.5)*(W/900);
 
     // Vertical position — slight randomness, higher scores tend toward center
     const centerBias=score/100*0.6;
@@ -3182,7 +3182,7 @@ function initParticles(){
   }
 
   // Pre-spawn distributed across the canvas
-  const initCount=Math.round(50*(W/900));
+  const initCount=Math.round(120*(W/900));
   for(let i=0;i<initCount;i++){
     spawn();
     const d=drops[drops.length-1];
@@ -3235,7 +3235,7 @@ function initParticles(){
         cvs.style.width=W+'px';cvs.style.height=H+'px';
         ctx.setTransform(1,0,0,1,0,0);ctx.scale(dpr,dpr);
         drops.length=0;
-        const cap=Math.round(50*(W/900));
+        const cap=Math.round(120*(W/900));
         for(let i=0;i<cap;i++){spawn();const d=drops[drops.length-1];d.x=Math.random()*W;d.opacity=d.maxOpacity*0.7;d.life=30;}
       },150);
     }).observe(host);
@@ -3340,7 +3340,7 @@ function initParticles(){
   function lerpC(a,b,t){t=Math.max(0,Math.min(1,t));return a.map((v,i)=>Math.round(v+(b[i]-v)*t));}
 
   requestAnimationFrame(frame);
-  setInterval(()=>{const cap=Math.round(55*(W/900));if(drops.length<cap)spawn();},100);
+  setInterval(()=>{const cap=Math.round(130*(W/900));if(drops.length<cap)spawn();},40);
 }
 
 if(document.readyState==='complete'){setTimeout(initParticles,50);}
