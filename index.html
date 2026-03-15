@@ -1579,7 +1579,13 @@ async function loadData(){
     const res=await fetch('data/meta_signal_latest.csv?t='+Date.now());
     if(res.ok){
       const text=await res.text();
-      const rows=text.trim().split('\n').slice(1).map(l=>{const c=l.split(',');return{ticker:c[0],score:parseFloat(c[3]||0),final_score:parseFloat(c[1]||0),action:c[2]||'—',phi:parseFloat(c[4]||0),psi:parseFloat(c[5]||0),gate:parseFloat(c[8]||0)};}).filter(r=>r.ticker&&r.ticker.length>0&&!isNaN(r.score));
+      const _lines=text.trim().split('\n');
+      const _hdrs=_lines[0].split(',').map(h=>h.trim().toLowerCase());
+      const _ci=n=>_hdrs.findIndex(h=>h===n||h.includes(n));
+      const _iT=_ci('ticker'),_iFS=_ci('final_score'),_iA=_ci('trade_action'),_iRS=_ci('raw_score'),_iOS=_ci('options_score'),_iPhi=_ci('phi_score'),_iPsi=_ci('psi_score'),_iG=_ci('regime_gate');
+      // Fallback for v1 obfuscated format: id,s1,s2,s3,s4,s5,s6,s7,s8
+      const _v1=(_iT<0&&_hdrs[0]==='id');
+      const rows=_lines.slice(1).map(l=>{const c=l.split(',');if(_v1)return{ticker:c[0],score:parseFloat(c[3]||0),final_score:parseFloat(c[1]||0),action:c[2]||'—',phi:parseFloat(c[4]||0),psi:parseFloat(c[5]||0),gate:parseFloat(c[8]||0)};return{ticker:c[_iT>=0?_iT:0],score:parseFloat(c[_iRS>=0?_iRS:3]||0),final_score:parseFloat(c[_iFS>=0?_iFS:1]||0),action:c[_iA>=0?_iA:2]||'—',phi:parseFloat(c[_iPhi>=0?_iPhi:9]||0),psi:parseFloat(c[_iPsi>=0?_iPsi:10]||0),gate:parseFloat(c[_iG>=0?_iG:16]||0)};}).filter(r=>r.ticker&&r.ticker.length>0&&!isNaN(r.score));
       rows.sort((a,b)=>b.score-a.score);
       D.sig=rows;
     }
