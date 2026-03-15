@@ -1051,27 +1051,27 @@ body::after{
 
             <!-- Right: Signal Architecture -->
             <div>
-              <div style="font-size:9px;letter-spacing:1.5px;color:var(--t4);margin-bottom:16px">SIGNAL ARCHITECTURE · VRP-ONLY</div>
+              <div style="font-size:9px;letter-spacing:1.5px;color:var(--t4);margin-bottom:16px">SIGNAL ARCHITECTURE</div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
                 <div>
                   <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px">
                     <div style="font-size:40px;font-weight:700;color:var(--cyan);line-height:1;text-shadow:0 0 20px rgba(0,255,180,0.2)">Φ</div>
                     <div>
-                      <div style="font-size:11px;font-weight:600;color:var(--t1)">Volatility Risk Premium</div>
-                      <div style="font-size:9px;color:var(--t4);letter-spacing:1px">ANTIBODY·Bind · Primary</div>
+                      <div style="font-size:11px;font-weight:600;color:var(--t1)">Signal Intensity</div>
+                      <div style="font-size:9px;color:var(--t4);letter-spacing:1px">ANTIBODY·Bind</div>
                     </div>
                   </div>
-                  <div style="font-family:'Outfit',sans-serif;font-size:11px;color:var(--t3);line-height:1.7">The core signal: measures the spread between implied and realized volatility for each security. Higher values indicate greater mispricing of risk — the engine's primary source of alpha.</div>
+                  <div style="font-family:'Outfit',sans-serif;font-size:11px;color:var(--t3);line-height:1.7">A measure of signal intensity derived from multi-dimensional analysis of each security. Higher values indicate stronger conviction in the model's assessment of near-term directional potential.</div>
                 </div>
                 <div>
                   <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px">
                     <div style="font-size:40px;font-weight:700;color:var(--cyan);line-height:1;text-shadow:0 0 20px rgba(0,255,180,0.2)">Ψ</div>
                     <div>
-                      <div style="font-size:11px;font-weight:600;color:var(--t1)">Regime Context</div>
-                      <div style="font-size:9px;color:var(--t4);letter-spacing:1px">ANTIBODY·Bind · Secondary</div>
+                      <div style="font-size:11px;font-weight:600;color:var(--t1)">Divergence Index</div>
+                      <div style="font-size:9px;color:var(--t4);letter-spacing:1px">ANTIBODY·Bind</div>
                     </div>
                   </div>
-                  <div style="font-family:'Outfit',sans-serif;font-size:11px;color:var(--t3);line-height:1.7">A composite measure of each security's signal environment. In the current VRP-only configuration, Ψ mirrors the primary signal. Future iterations may reintroduce divergence as a separate alpha source.</div>
+                  <div style="font-family:'Outfit',sans-serif;font-size:11px;color:var(--t3);line-height:1.7">A measure of structural inefficiency across each security's current configuration. Elevated readings indicate conditions that have historically preceded significant directional resolution.</div>
                 </div>
               </div>
             </div>
@@ -1079,38 +1079,40 @@ body::after{
         </div>
       </div>
 
-      <!-- ROW 2: Score Distribution + Signal Landscape -->
-      <div class="g2 mb16">
+      <!-- ROW 2: AFFINITY·Score — Extended Card -->
+      <div class="mb16">
         <div class="card">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
             <div class="pipe-circle" style="background:rgba(96,144,255,0.08);border-color:rgba(96,144,255,0.25);color:var(--blue);font-size:12px;width:32px;height:32px;flex-shrink:0">3</div>
             <div>
               <div style="font-size:13px;letter-spacing:1px;color:var(--blue)">AFFINITY·Score</div>
-              <div style="font-size:9px;letter-spacing:1.5px;color:var(--t4)">SIGNAL LANDSCAPE · SCORE vs RANK</div>
+              <div style="font-size:9px;letter-spacing:1.5px;color:var(--t4)">SIGNAL LANDSCAPE · SCORE vs RANK &nbsp;·&nbsp; SECTOR × MCAP HEATMAP</div>
             </div>
           </div>
-          <div style="display:grid;grid-template-columns:2fr 3fr;gap:16px;align-items:start">
+          <div style="display:grid;grid-template-columns:1fr 1px 1fr;gap:24px;align-items:start">
+            <!-- Left: Top/Bottom 5 + Score Waterfall -->
             <div>
-              <div style="font-size:9px;letter-spacing:1.5px;color:var(--t4);margin-bottom:10px">TOP 5 & BOTTOM 5</div>
-              <div id="pl-top20" style="display:flex;flex-direction:column;gap:5px"></div>
+              <div style="display:grid;grid-template-columns:1fr 2fr;gap:16px;align-items:start">
+                <div>
+                  <div style="font-size:9px;letter-spacing:1.5px;color:var(--t4);margin-bottom:10px">TOP 5 & BOTTOM 5</div>
+                  <div id="pl-top20" style="display:flex;flex-direction:column;gap:5px"></div>
+                </div>
+                <div id="pl-landscape" style="height:340px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px">
+                  <div style="font-size:11px;color:var(--t4)">Awaiting signal data</div>
+                  <div style="font-size:9px;color:rgba(96,144,255,0.4);letter-spacing:1px">AFFINITY·Score · data/meta_signal_latest.csv</div>
+                </div>
+              </div>
             </div>
-            <div id="pl-landscape" style="height:340px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px">
-              <div style="font-size:11px;color:var(--t4)">Awaiting signal data</div>
-              <div style="font-size:9px;color:rgba(96,144,255,0.4);letter-spacing:1px">AFFINITY·Score · data/meta_signal_latest.csv</div>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-            <div class="pipe-circle" style="background:rgba(96,144,255,0.08);border-color:rgba(96,144,255,0.25);color:var(--blue);font-size:12px;width:32px;height:32px;flex-shrink:0">3</div>
+            <!-- Divider -->
+            <div style="background:var(--bd);width:1px;margin:0 4px;align-self:stretch"></div>
+            <!-- Right: Sector × McapTier Heatmap -->
             <div>
-              <div style="font-size:13px;letter-spacing:1px;color:var(--blue)">AFFINITY·Score</div>
-              <div style="font-size:9px;letter-spacing:1.5px;color:var(--t4)">SCORE DISTRIBUTION · <span id="pl-dist-count">418</span> TICKERS</div>
+              <div style="font-size:9px;letter-spacing:1.5px;color:var(--t4);margin-bottom:10px">SIGNAL CONCENTRATION · SECTOR × MARKET CAP</div>
+              <div id="pl-heatmap" style="height:340px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px">
+                <div style="font-size:11px;color:var(--t4)">Awaiting universe + signal data</div>
+                <div style="font-size:9px;color:rgba(96,144,255,0.4);letter-spacing:1px">Joins universe_latest.csv × meta_signal_latest.csv</div>
+              </div>
             </div>
-          </div>
-          <div id="pl-score-dist" style="height:340px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px">
-            <div style="font-size:11px;color:var(--t4)">Awaiting signal data</div>
-            <div style="font-size:9px;color:rgba(96,144,255,0.4);letter-spacing:1px">AFFINITY·Score · data/meta_signal_latest.csv</div>
           </div>
         </div>
       </div>
@@ -2238,39 +2240,73 @@ async function renderSignals(r){
   const depEl=$('pl-deployed');
   if(depEl){depEl.textContent=fmt$(_cascDep);depEl.style.color=_cascDep>0?'var(--cyan)':'var(--t3)';}
 
-  // Score Distribution histogram
+  // Sector × McapTier Heatmap
   if(scored>0 && !window.Plotly){
     // Plotly not yet loaded — retry once it arrives
     const waitPlotly=setInterval(()=>{if(window.Plotly){clearInterval(waitPlotly);renderSignals(r);}},200);
     setTimeout(()=>clearInterval(waitPlotly),10000);
   }
   if(scored>0 && window.Plotly){
-    const scores=sig.map(s=>s.score);
-    set('pl-score-dist','');
-    $('pl-score-dist').style.cssText='height:340px';
-    const binSize=5, binsR=[], binsB=[], binsG=[];
-    for(let b=0;b<100;b+=binSize){
-      const count=scores.filter(s=>s>=b&&s<b+binSize).length;
-      const mid=b+binSize/2;
-      binsR.push({x:mid,y:mid<30?count:0});
-      binsB.push({x:mid,y:(mid>=30&&mid<=60)?count:0});
-      binsG.push({x:mid,y:mid>60?count:0});
+    // Build heatmap: join universe (sector, mcap_tier) with signal scores
+    const univ=window._univAllRows||[];
+    const hmEl=$('pl-heatmap');
+    if(hmEl && univ.length>0){
+      const uniMap={};univ.forEach(u=>{uniMap[u.ticker]={cat:u.cat,tier:u.tier};});
+      const sectors=['Biotechnology','Pharmaceuticals','Life Science Tools','Diagnostics','Medical Devices','Other'];
+      const tiers=['large_cap','mid_cap','small_cap','micro_cap'];
+      const tierLabels=['Large','Mid','Small','Micro'];
+      // Accumulate scores + counts
+      const grid={},counts={};
+      sectors.forEach(s=>{grid[s]={};counts[s]={};tiers.forEach(t=>{grid[s][t]=0;counts[s][t]=0;});});
+      sig.forEach(s=>{
+        const u=uniMap[s.ticker];if(!u)return;
+        const cat=u.cat||'Other';const tier=u.tier||'';
+        if(grid[cat]&&grid[cat][tier]!=null){grid[cat][tier]+=s.score;counts[cat][tier]++;}
+      });
+      // Build z-matrix (avg score), text annotations, and count annotations
+      const z=[],text=[],countText=[];
+      sectors.forEach(sec=>{
+        const row=[],tRow=[],cRow=[];
+        tiers.forEach(t=>{
+          const n=counts[sec][t];
+          const avg=n>0?grid[sec][t]/n:null;
+          row.push(avg);
+          tRow.push(avg!=null?avg.toFixed(1):'—');
+          cRow.push(n>0?`n=${n}`:'');
+        });
+        z.push(row);text.push(tRow);countText.push(cRow);
+      });
+      set('pl-heatmap','');
+      hmEl.style.cssText='height:340px';
+      // Custom annotations: avg score + count per cell
+      const annotations=[];
+      sectors.forEach((sec,si)=>{
+        tiers.forEach((t,ti)=>{
+          if(z[si][ti]!=null){
+            annotations.push({x:tierLabels[ti],y:sec,text:`<b>${text[si][ti]}</b><br><span style="font-size:8px">${countText[si][ti]}</span>`,showarrow:false,font:{size:10,color:z[si][ti]>50?'rgba(0,0,0,0.8)':'rgba(255,255,255,0.8)'}});
+          } else {
+            annotations.push({x:tierLabels[ti],y:sec,text:'—',showarrow:false,font:{size:9,color:'rgba(255,255,255,0.15)'}});
+          }
+        });
+      });
+      Plotly.newPlot('pl-heatmap',[{
+        z:z,x:tierLabels,y:sectors,
+        type:'heatmap',
+        colorscale:[[0,'rgba(20,30,60,0.9)'],[0.3,'rgba(96,144,255,0.6)'],[0.6,'rgba(0,200,255,0.7)'],[1,'rgba(0,255,180,0.85)']],
+        zmin:0,zmax:80,
+        showscale:true,
+        colorbar:{title:{text:'Avg Score',font:{size:8,color:'rgba(255,255,255,0.4)'}},tickfont:{size:7,color:'rgba(255,255,255,0.3)'},len:0.8,thickness:10,outlinewidth:0,x:1.02},
+        hovertemplate:'<b>%{y}</b> · %{x}<br>Avg Score: %{z:.1f}<extra></extra>',
+        xgap:3,ygap:3,
+      }],{
+        paper_bgcolor:'transparent',plot_bgcolor:'transparent',
+        margin:{l:120,r:50,t:10,b:30},
+        font:{family:'JetBrains Mono',size:8,color:'rgba(255,255,255,0.4)'},
+        xaxis:{side:'bottom',tickfont:{size:9,color:'rgba(255,255,255,0.5)'},showgrid:false},
+        yaxis:{tickfont:{size:9,color:'rgba(255,255,255,0.5)'},showgrid:false,autorange:'reversed'},
+        annotations:annotations,
+      },{displayModeBar:false,responsive:true});
     }
-    const barBase={type:'bar',width:binSize*0.88,line:{width:0},hovertemplate:'Score: %{x}<br>Count: %{y}<extra></extra>'};
-    Plotly.newPlot('pl-score-dist',[
-      {...barBase,name:'Score < 30',x:binsR.map(b=>b.x),y:binsR.map(b=>b.y),marker:{color:'rgba(255,50,80,0.7)'}},
-      {...barBase,name:'Score 30–60',x:binsB.map(b=>b.x),y:binsB.map(b=>b.y),marker:{color:'rgba(96,144,255,0.65)'}},
-      {...barBase,name:'Score > 60',x:binsG.map(b=>b.x),y:binsG.map(b=>b.y),marker:{color:'rgba(0,255,180,0.75)'}},
-    ],{
-      paper_bgcolor:'transparent',plot_bgcolor:'transparent',
-      margin:{l:36,r:10,t:10,b:30},
-      font:{family:'JetBrains Mono',size:9,color:'rgba(255,255,255,0.4)'},
-      xaxis:{gridcolor:'rgba(50,70,130,0.1)',linecolor:'rgba(50,70,130,0.15)',title:'AFFINITY Score',titlefont:{size:9},range:[0,105]},
-      yaxis:{gridcolor:'rgba(50,70,130,0.1)',linecolor:'rgba(50,70,130,0.15)',title:'Count',titlefont:{size:9}},
-      bargap:0.05,barmode:'overlay',
-      legend:{x:0.98,y:0.98,xanchor:'right',yanchor:'top',bgcolor:'rgba(6,10,28,0.7)',bordercolor:'rgba(50,80,160,0.3)',borderwidth:1,font:{size:8}},
-      showlegend:true,
-    },{displayModeBar:false,responsive:true});
   }
 
   // Signal Landscape — 2D waterfall: Score vs Rank (VRP-only — 3D Φ/Ψ scatter removed)
@@ -2316,8 +2352,8 @@ async function renderSignals(r){
     const cols=[
       {key:'rank',        label:'RANK'},
       {key:'ticker',      label:'TICKER'},
-      {key:'phi',         label:'Φ (VRP)'},
-      {key:'psi',         label:'Ψ (CTX)'},
+      {key:'phi',         label:'Φ'},
+      {key:'psi',         label:'Ψ'},
       {key:'score',       label:'COMPOSITE'},
       {key:'action',      label:'PRE-GATE ACTION'},
       {key:'gate',        label:'GATE'},
