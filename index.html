@@ -1587,7 +1587,7 @@ async function loadData(){
       const _v1=(_iT<0&&(_hdrs[0]==='id'||_hdrs[0].endsWith('id')));
       const rows=_lines.slice(1).map(l=>{const c=l.split(',');if(_v1)return{ticker:c[0],score:parseFloat(c[3]||0),final_score:parseFloat(c[1]||0),action:c[2]||'—',phi:parseFloat(c[4]||0),psi:parseFloat(c[5]||0),gate:parseFloat(c[8]||0)};return{ticker:c[_iT>=0?_iT:0],score:parseFloat(c[_iRS>=0?_iRS:3]||0),final_score:parseFloat(c[_iFS>=0?_iFS:1]||0),action:c[_iA>=0?_iA:2]||'—',phi:parseFloat(c[_iPhi>=0?_iPhi:9]||0),psi:parseFloat(c[_iPsi>=0?_iPsi:10]||0),gate:parseFloat(c[_iG>=0?_iG:16]||0)};}).filter(r=>r.ticker&&r.ticker.length>0&&!isNaN(r.score));
       rows.sort((a,b)=>b.score-a.score);
-      D.sig=rows;console.log('meta_signal parsed:',rows.length,'rows, v1=',_v1,'hdrs=',_hdrs.slice(0,3));
+      D.sig=rows;
     }
   }catch{}
   // Load universe CSV eagerly so Holdings Distribution is populated on first render
@@ -2055,7 +2055,7 @@ async function renderSignals(r){
   // v2: Gate level description
   const glEl=$('pl-gate-level');if(glEl){const gv=r.position_gate!=null?r.position_gate:0.5;let gLabel,gCol;if(gv>=1){gLabel='Strong Bull';gCol='var(--cyan)';}else if(gv>=0.5){gLabel='Mild Bull';gCol='var(--cyan)';}else if(gv>=0.25){gLabel='Neutral';gCol='var(--amber)';}else{gLabel='Bear';gCol='var(--red)';}glEl.textContent=gLabel+' ('+Math.round(gv*100)+'%)';glEl.style.color=gCol;glEl.style.background=gv>=0.5?'rgba(0,255,180,0.08)':gv>0?'rgba(255,200,40,0.08)':'rgba(255,50,80,0.08)';glEl.style.border='1px solid '+(gv>=0.5?'rgba(0,255,180,0.2)':gv>0?'rgba(255,200,40,0.2)':'rgba(255,50,80,0.2)');}
   // v2: Stop loss config display
-  const slEl=$('pl-stop-loss');if(slEl&&p){const sl=p.stop_loss_pct;if(sl!=null&&sl!==null){slEl.textContent=Math.abs(sl*100)+'%';slEl.style.color='var(--amber)';const slL=$('pl-stop-loss-label');if(slL)slL.textContent='Active — sells at '+Math.abs(sl*100)+'% loss';}else{slEl.textContent='OFF';slEl.style.color='var(--t4)';}}
+  const slEl=$('pl-stop-loss');const _p=D.p||{};if(slEl){const sl=_p.stop_loss_pct;if(sl!=null&&sl!==null){slEl.textContent=Math.abs(sl*100)+'%';slEl.style.color='var(--amber)';const slL=$('pl-stop-loss-label');if(slL)slL.textContent='Active — sells at '+Math.abs(sl*100)+'% loss';}else{slEl.textContent='OFF';slEl.style.color='var(--t4)';}}
   const cEl=$('pl-composite');if(cEl){cEl.textContent=(r.composite_score||0).toFixed(4);cEl.style.color=col;}
   txt('pl-hmm',(r.hmm_state||'—').toString());
 
@@ -2593,12 +2593,13 @@ function renderTrack(b){
     const n=m.long_positions||0;
     const reg=m.regime||'Bear';
     let msg='';
+    const _gate=window.D&&window.D.r?window.D.r.position_gate:0;
     if(reg==='Bear'){
       msg='The portfolio currently holds <strong>zero positions</strong> due to <strong>Bear</strong> regime classification by CYTOKINE·Gate.';
     } else if(reg==='Neutral'){
-      msg=`The portfolio is <strong>${Math.round(livGate*100)}% deployed</strong> with <strong>${n} position${n!==1?'s':''}</strong> under <strong>${regime}</strong> regime — ${Math.round(livGate*100)}% capital deployment via CYTOKINE·Gate (4-level).`;
+      msg=`The portfolio is <strong>${Math.round(_gate*100)}% deployed</strong> with <strong>${n} position${n!==1?'s':''}</strong> under <strong>${reg}</strong> regime — ${Math.round(_gate*100)}% capital deployment via CYTOKINE·Gate (4-level).`;
     } else {
-      msg=`The portfolio is <strong>${Math.round(livGate*100)}% deployed</strong> with <strong>${n} position${n!==1?'s':''}</strong> under <strong>${regime}</strong> regime — ${Math.round(livGate*100)}% capital deployment via CYTOKINE·Gate (4-level).`;
+      msg=`The portfolio is <strong>${Math.round(_gate*100)}% deployed</strong> with <strong>${n} position${n!==1?'s':''}</strong> under <strong>${reg}</strong> regime — ${Math.round(_gate*100)}% capital deployment via CYTOKINE·Gate (4-level).`;
     }
     liveEl.innerHTML=msg;
   }
