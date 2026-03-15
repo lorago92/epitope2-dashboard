@@ -1228,7 +1228,7 @@ body::after{
                   <span style="font-size:11px;color:var(--t4)">×</span>
                   <span style="font-size:13px;letter-spacing:1px;color:var(--amber)">CYTOKINE·Gate</span>
                 </div>
-                <div style="font-size:9px;letter-spacing:1.5px;color:var(--t4);margin-top:2px">GATED SIGNAL RANKING · COMPOSITE × REGIME MULTIPLIER → FINAL SCORE · LAST REBALANCE <span id="pl-rank-rebal-date">—</span></div>
+                <div style="font-size:9px;letter-spacing:1.5px;color:var(--t4);margin-top:2px">SIGNAL RANKING · REGIME-FILTERED · LAST REBALANCE <span id="pl-rank-rebal-date">—</span></div>
               </div>
             </div>
 
@@ -1584,10 +1584,10 @@ async function loadData(){
       const _lines=text.trim().split('\n');
       const _hdrs=_lines[0].replace(/^\ufeff/,'').split(',').map(h=>h.trim().toLowerCase().replace(/['"]/g,''));
       const _ci=n=>_hdrs.findIndex(h=>h===n||h.includes(n));
-      const _iT=_ci('ticker'),_iFS=_ci('final_score'),_iA=_ci('trade_action'),_iRS=_ci('raw_score'),_iOS=_ci('options_score'),_iPhi=_ci('phi_score'),_iPsi=_ci('psi_score'),_iG=_ci('regime_gate');
+      const _iT=_ci('ticker'),_iFS=_ci('final_score'),_iA=_ci('trade_action'),_iRS=_ci('raw_score'),_iOS=_ci('options_score'),_iPhi=_ci('phi_score'),_iPsi=_ci('psi_score'),_iG=_ci('regime_gate'),_iReg=_ci('regime');
       // Fallback for v1 obfuscated format: id,s1,s2,s3,s4,s5,s6,s7,s8
       const _v1=(_iT<0&&(_hdrs[0]==='id'||_hdrs[0].endsWith('id')));
-      const rows=_lines.slice(1).map(l=>{const c=l.split(',');if(_v1)return{ticker:c[0],score:parseFloat(c[3]||0),final_score:parseFloat(c[1]||0),action:c[2]||'—',phi:parseFloat(c[4]||0),psi:parseFloat(c[5]||0),gate:parseFloat(c[8]||0)};return{ticker:c[_iT>=0?_iT:0],score:parseFloat(c[_iRS>=0?_iRS:3]||0),final_score:parseFloat(c[_iFS>=0?_iFS:1]||0),action:c[_iA>=0?_iA:2]||'—',phi:parseFloat(c[_iPhi>=0?_iPhi:9]||0),psi:parseFloat(c[_iPsi>=0?_iPsi:10]||0),gate:parseFloat(c[_iG>=0?_iG:16]||0)};}).filter(r=>r.ticker&&r.ticker.length>0&&!isNaN(r.score));
+      const rows=_lines.slice(1).map(l=>{const c=l.split(',');if(_v1)return{ticker:c[0],score:parseFloat(c[3]||0),final_score:parseFloat(c[1]||0),action:c[2]||'—',phi:parseFloat(c[4]||0),psi:parseFloat(c[5]||0),regime:c[7]||'—',gate:parseFloat(c[8]||0)};return{ticker:c[_iT>=0?_iT:0],score:parseFloat(c[_iRS>=0?_iRS:3]||0),final_score:parseFloat(c[_iFS>=0?_iFS:1]||0),action:c[_iA>=0?_iA:2]||'—',phi:parseFloat(c[_iPhi>=0?_iPhi:9]||0),psi:parseFloat(c[_iPsi>=0?_iPsi:10]||0),regime:c[_iReg>=0?_iReg:15]||'—',gate:parseFloat(c[_iG>=0?_iG:16]||0)};}).filter(r=>r.ticker&&r.ticker.length>0&&!isNaN(r.score));
       rows.sort((a,b)=>b.score-a.score);
       D.sig=rows;
     }
@@ -2341,24 +2341,24 @@ async function renderSignals(r){
     set('pl-rank-table','');
     $('pl-rank-table').style.cssText='';
 
-    // Build full ranked list: top half sorted desc, bottom half sorted asc for display
+    // Build ranked list using raw_score (not gate-multiplied final_score)
     const allRanked=[...sig].map((s,i)=>({
       ...s,
       rank:i+1,
-      pre_gate_action: i<20 ? 'BUY' : i<60 ? 'WATCH' : 'AVOID',
-      final_action: s.gate===0 ? 'GATED' : i<20 ? 'BUY' : i<60 ? 'WATCH' : 'AVOID',
+      signal:s.score, // raw_score — the pure signal
+      regime_name:s.regime||'—',
+      deployment:s.gate,
+      action: s.gate===0 ? 'GATED' : i<20 ? 'BUY' : i<60 ? 'WATCH' : 'AVOID',
     }));
 
     const cols=[
       {key:'rank',        label:'RANK'},
       {key:'ticker',      label:'TICKER'},
-      {key:'phi',         label:'Φ'},
-      {key:'psi',         label:'Ψ'},
-      {key:'score',       label:'COMPOSITE'},
-      {key:'action',      label:'PRE-GATE ACTION'},
-      {key:'gate',        label:'GATE'},
-      {key:'final_score', label:'FINAL SCORE'},
-      {key:'final_action',label:'FINAL ACTION'},
+      {key:'signal',      label:'SIGNAL'},
+      {key:'conviction',  label:'CONVICTION'},
+      {key:'regime_name', label:'REGIME'},
+      {key:'deployment',  label:'DEPLOYMENT'},
+      {key:'action',      label:'ACTION'},
     ];
 
     let sortCol='rank', sortDir=1, rankFilter='';
@@ -2383,7 +2383,7 @@ async function renderSignals(r){
         ? `${sorted.length} result${sorted.length!==1?'s':''} for "${query}"`
         : `Showing ${sorted.length} rows · scroll for more`;
       const arrow=k=>k===sortCol?(sortDir===1?' ▼':' ▲'):'';
-      const widths=['50px','90px','65px','75px','105px','145px','65px','105px','115px'];
+      const widths=['50px','90px','75px','160px','100px','100px','100px'];
       const colGroup=`<colgroup>${widths.map(w=>`<col style="width:${w}">`).join('')}</colgroup>`;
       let h=`<div style="overflow-y:auto;max-height:480px">
         <table class="sig-tbl">
@@ -2395,22 +2395,21 @@ async function renderSignals(r){
         h+=`<tr><td colspan="${cols.length}" style="padding:24px;text-align:center;color:var(--t4);font-size:11px">No results for "${query}"</td></tr>`;
       } else {
         sorted.forEach((s)=>{
-          const ac=s.pre_gate_action==='BUY'?'var(--cyan)':s.pre_gate_action==='WATCH'?'var(--amber)':'var(--t4)';
-          const fac=s.final_action==='BUY'?'var(--cyan)':s.final_action==='GATED'?'var(--red)':s.final_action==='WATCH'?'var(--amber)':'var(--t4)';
-          const fc=s.final_score>0?'var(--cyan)':'var(--t4)';
-          const gateColor=s.gate===0?'var(--red)':s.gate===1?'var(--cyan)':'var(--amber)';
-          const phi=!isNaN(s.phi)?s.phi.toFixed(1):'—';
-          const psi=!isNaN(s.psi)?s.psi.toFixed(1):'—';
+          const ac=s.action==='BUY'?'var(--cyan)':s.action==='WATCH'?'var(--amber)':s.action==='GATED'?'var(--red)':'var(--t4)';
+          const sigCol=s.signal>=70?'var(--cyan)':s.signal>=40?'var(--blue)':'var(--t4)';
+          const depCol=s.deployment===0?'var(--red)':s.deployment>=1?'var(--cyan)':'var(--amber)';
+          const regCol=s.regime_name==='Bear'?'var(--red)':(s.regime_name==='Neutral'?'var(--amber)':'var(--cyan)');
+          // Conviction bar: visual representation of signal strength
+          const barPct=Math.min(s.signal,100);
+          const barCol=s.signal>=70?'rgba(0,255,180,0.6)':s.signal>=40?'rgba(96,144,255,0.5)':'rgba(100,110,140,0.3)';
           h+=`<tr>
             <td style="color:var(--t4)">${s.rank}</td>
             <td style="color:${ac};font-weight:600;font-family:'JetBrains Mono',monospace">${s.ticker}</td>
-            <td style="color:var(--t2)">${phi}</td>
-            <td style="color:var(--t2)">${psi}</td>
-            <td style="font-weight:600;color:var(--t1)">${s.score.toFixed(1)}</td>
-            <td style="color:${ac};font-weight:600">${s.pre_gate_action}</td>
-            <td style="color:${gateColor};font-weight:600">${(s.gate*100).toFixed(0)}%</td>
-            <td style="color:${fc};font-weight:600">${s.final_score.toFixed(1)}</td>
-            <td style="color:${fac};font-weight:600">${s.final_action}</td>
+            <td style="font-weight:600;color:${sigCol}">${s.signal.toFixed(1)}</td>
+            <td><div style="display:flex;align-items:center;gap:6px"><div style="flex:1;height:4px;background:rgba(50,60,100,0.3);border-radius:2px;overflow:hidden"><div style="width:${barPct}%;height:100%;background:${barCol};border-radius:2px"></div></div><span style="font-size:9px;color:var(--t4);min-width:28px;text-align:right">${barPct.toFixed(0)}</span></div></td>
+            <td style="color:${regCol};font-weight:500">${s.regime_name}</td>
+            <td style="color:${depCol};font-weight:600">${(s.deployment*100).toFixed(0)}%</td>
+            <td style="color:${ac};font-weight:600">${s.action}</td>
           </tr>`;
         });
       }
