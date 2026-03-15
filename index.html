@@ -3164,7 +3164,7 @@ function initParticles(){
     const rank=td?td.rank:999;
 
     const survivesGate=(regime!=='Bear')&&(isBuy||(score>70&&Math.random()<gate*0.3));
-    const speed=0.4+score/100*1.2;
+    const speed=0.6+score/100*1.6;
     const fontSize=isBuy?(9+score/100*4):(6+score/100*3);
 
     drops.push({
@@ -3182,11 +3182,11 @@ function initParticles(){
   }
 
   // Pre-spawn
-  const initCount=Math.round(60*(W/900));
+  const initCount=Math.round(90*(W/900));
   for(let i=0;i<initCount;i++){
     spawn();
     const d=drops[drops.length-1];
-    d.y=Math.random()*H;
+    d.y=Math.random()*H*0.65;
     d.opacity=d.maxOpacity*0.6;
     d.life=20;
   }
@@ -3236,7 +3236,7 @@ function initParticles(){
         ctx.setTransform(1,0,0,1,0,0);ctx.scale(dpr,dpr);
         drops.length=0;
         const cap=Math.round(60*(W/900));
-        for(let i=0;i<cap;i++){spawn();const d=drops[drops.length-1];d.y=Math.random()*H;d.opacity=d.maxOpacity*0.6;d.life=20;}
+        for(let i=0;i<cap;i++){spawn();const d=drops[drops.length-1];d.y=Math.random()*H*0.65;d.opacity=d.maxOpacity*0.6;d.life=20;}
       },150);
     }).observe(host);
   }
@@ -3290,10 +3290,10 @@ function initParticles(){
       if(d.life<12) d.opacity=Math.min(d.life/12,d.maxOpacity);
 
       // Fade out at gate if not surviving
-      if(prog>d.fadeAt) d.opacity*=0.94;
+      if(prog>d.fadeAt) d.opacity*=0.88;
 
       // Remove
-      if(d.y>H+20||d.opacity<0.02){drops.splice(i,1);spawn();continue;}
+      if(d.y>H+10||d.opacity<0.03){drops.splice(i,1);spawn();continue;}
 
       // Color based on vertical position
       let rgb;
