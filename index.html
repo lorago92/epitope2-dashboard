@@ -497,49 +497,98 @@ body::after{
   <div class="page active" id="page-overview">
     <div class="main">
 
-      <!-- Row 1: Pipeline + Ticker Rain -->
-      <div class="g-auto mb16" style="grid-template-columns:200px 1fr">
-
-        <!-- Pipeline -->
-        <div class="card">
-          <div class="card-title">Pipeline</div>
-          <div>
-            <div class="pipe-item">
-              <div class="pipe-circle" style="background:rgba(96,220,255,0.08);border-color:rgba(96,220,255,0.3);color:#60dcff">1</div>
-              <div><div class="pipe-name" style="color:#60dcff">ANTIGEN·Capture</div><div class="pipe-desc">Acquire market data</div></div>
-            </div>
-            <div class="pipe-connector" style="--a:rgba(96,220,255,0.3);--b:rgba(0,255,180,0.3)"></div>
-            <div class="pipe-item">
-              <div class="pipe-circle" style="background:rgba(0,255,180,0.08);border-color:rgba(0,255,180,0.25);color:var(--cyan)">2</div>
-              <div><div class="pipe-name" style="color:var(--cyan)">ANTIBODY·Bind</div><div class="pipe-desc">Detect signal targets</div></div>
-            </div>
-            <div class="pipe-connector" style="--a:rgba(0,255,180,0.3);--b:rgba(96,144,255,0.3)"></div>
-            <div class="pipe-item">
-              <div class="pipe-circle" style="background:rgba(96,144,255,0.08);border-color:rgba(96,144,255,0.25);color:var(--blue)">3</div>
-              <div><div class="pipe-name" style="color:var(--blue)">AFFINITY·Score</div><div class="pipe-desc">Rank · select top 20</div></div>
-            </div>
-            <div class="pipe-connector" style="--a:rgba(96,144,255,0.3);--b:rgba(255,200,40,0.3)"></div>
-            <div class="pipe-item">
-              <div class="pipe-circle" style="background:rgba(255,200,40,0.08);border-color:rgba(255,200,40,0.25);color:var(--amber)">4</div>
-              <div><div class="pipe-name" style="color:var(--amber)">CYTOKINE·Gate</div><div class="pipe-desc">Macro regime filter</div></div>
-            </div>
-            <div class="pipe-connector" style="--a:rgba(255,200,40,0.3);--b:rgba(176,106,255,0.3)"></div>
-            <div class="pipe-item">
-              <div class="pipe-circle" style="background:rgba(176,106,255,0.08);border-color:rgba(176,106,255,0.25);color:#b06aff">5</div>
-              <div><div class="pipe-name" style="color:#b06aff">CASCADE·Execute</div><div class="pipe-desc">Deploy capital</div></div>
+      <!-- Row 1: Hero — Ticker Rain (full width) -->
+      <div class="mb16">
+        <div class="card" style="padding:16px 20px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div class="card-title" style="margin:0">From Universe to Portfolio</div>
+            <div style="display:flex;gap:16px;font-size:9px;letter-spacing:1px;color:var(--t4)">
+              <span style="color:#60dcff">ANTIGEN</span>
+              <span style="color:var(--t4)">→</span>
+              <span style="color:#00ffb4">ANTIBODY</span>
+              <span style="color:var(--t4)">→</span>
+              <span style="color:#6090ff">AFFINITY</span>
+              <span style="color:var(--t4)">→</span>
+              <span style="color:#ffc828">CYTOKINE</span>
+              <span style="color:var(--t4)">→</span>
+              <span style="color:#b06aff">CASCADE</span>
             </div>
           </div>
-        </div>
-
-        <!-- From Universe to Portfolio (Ticker Rain) -->
-        <div class="card">
-          <div class="card-title">From Universe to Portfolio</div>
-          <div id="particle-flow" style="width:100%;height:240px;position:relative;overflow:hidden"></div>
+          <div id="particle-flow" style="width:100%;height:280px;position:relative;overflow:hidden"></div>
         </div>
       </div>
 
-      <!-- Row 2: Universe Intelligence + Signal Strength + Current Regime -->
-      <div class="g-auto mb16" style="grid-template-columns:1fr 320px 1fr">
+      <!-- Row 2: Current Regime (hero) + Signal Strength + Universe Intelligence -->
+      <div class="g-auto mb16" style="grid-template-columns:1.2fr 1fr 1fr">
+
+        <!-- Current Regime — hero card -->
+        <div class="card regime-card">
+          <div class="card-top-bar" id="ov-top-bar" style="background:var(--amber);box-shadow:0 0 12px var(--amber)"></div>
+          <div class="card-title">Current Regime</div>
+          <div class="regime-val Neutral" id="ov-regime">NEUTRAL</div>
+          <div class="regime-gate">Position gate (4-level): <span class="amber" id="ov-gate">50%</span> <span style="font-size:10px;color:var(--t4)" id="ov-gate-level"></span></div>
+
+          <div class="gauge-wrap" style="margin-top:12px">
+            <div class="gauge-lbl">Composite Score</div>
+            <div class="gauge-zones"><span class="gz-bear">Bear</span><span class="gz-neutral">Neutral</span><span class="gz-bull">Bull</span></div>
+            <div class="gauge-track">
+              <div class="gauge-needle" id="ov-needle" style="left:50%">
+                <div class="gnv" id="ov-needle-val">0.00</div>
+                <div class="gnl"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PC6 + Architecture row -->
+          <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-top:12px;border-top:1px solid var(--bd)">
+            <div>
+              <div style="font-size:9px;color:var(--t4);letter-spacing:1px;margin-bottom:4px">PC6 BIOTECH FACTOR</div>
+              <div style="font-size:20px;font-weight:600;color:var(--cyan)" id="ov-pc6-val">+0.448</div>
+            </div>
+            <div>
+              <div style="font-size:9px;color:var(--t4);letter-spacing:1px;margin-bottom:4px">PC6 GATE</div>
+              <div style="font-size:20px;font-weight:600;color:var(--cyan)" id="ov-pc6-gate">BULL</div>
+            </div>
+          </div>
+
+          <!-- PCA + HMM compact -->
+          <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-top:12px;border-top:1px solid var(--bd)">
+            <div>
+              <div style="font-size:9px;color:var(--t4);margin-bottom:4px">PCA</div>
+              <div style="display:flex;height:5px;border-radius:3px;overflow:hidden;background:rgba(50,70,140,0.15)">
+                <div id="ov-pca-pc1" style="height:100%;background:#60dcff;opacity:0.85;transition:width 0.8s ease"></div>
+                <div id="ov-pca-pc2" style="height:100%;background:#6090ff;opacity:0.7;transition:width 0.8s ease"></div>
+                <div id="ov-pca-pc3" style="height:100%;background:#4060cc;opacity:0.55;transition:width 0.8s ease"></div>
+              </div>
+              <div style="font-size:9px;color:var(--blue);margin-top:4px" id="ov-pca-line">—</div>
+            </div>
+            <div>
+              <div style="font-size:9px;color:var(--t4);margin-bottom:4px">HMM</div>
+              <div style="position:relative;height:5px;border-radius:3px;background:rgba(50,70,140,0.15)">
+                <div id="ov-hmm-bar" style="position:absolute;top:0;height:100%;width:25%;border-radius:3px;background:var(--blue);opacity:0.7;transition:left 0.8s ease"></div>
+              </div>
+              <div style="font-size:9px;color:var(--blue);margin-top:4px" id="ov-hmm-line">—</div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--bd)">
+            <div style="font-size:10px;color:var(--t3)" id="ov-regime-since">—</div>
+          </div>
+        </div>
+
+        <!-- Signal Strength -->
+        <div class="card">
+          <div class="card-title">Signal Strength</div>
+          <div style="font-size:9px;letter-spacing:1.5px;color:var(--cyan);margin-bottom:8px;margin-top:2px">TOP RANKED</div>
+          <div id="sig-top"></div>
+          <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--bd)">
+            <div style="font-size:9px;letter-spacing:1.5px;color:var(--t4);margin-bottom:8px">BOTTOM RANKED</div>
+            <div id="sig-bot"></div>
+          </div>
+          <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--bd);font-size:9px;color:var(--t4)">
+            AFFINITY·Score · <span style="color:var(--t3)">418 securities ranked</span>
+          </div>
+        </div>
 
         <!-- Universe Intelligence -->
         <div class="card">
@@ -582,81 +631,6 @@ body::after{
               <div class="uni-kv"><span class="uni-k">Min daily volume</span><span class="uni-v">$1M ADDV</span></div>
               <div class="uni-kv"><span class="uni-k">Total securities</span><span class="uni-v">418</span></div>
             </div>
-          </div>
-        </div>
-
-        <!-- Signal Strength -->
-        <div class="card">
-          <div class="card-title">Signal Strength</div>
-          <div style="font-size:9px;letter-spacing:1.5px;color:var(--cyan);margin-bottom:8px;margin-top:2px">TOP RANKED</div>
-          <div id="sig-top"></div>
-          <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--bd)">
-            <div style="font-size:9px;letter-spacing:1.5px;color:var(--t4);margin-bottom:8px">BOTTOM RANKED</div>
-            <div id="sig-bot"></div>
-          </div>
-          <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--bd);font-size:9px;color:var(--t4)">
-            AFFINITY·Score · <span style="color:var(--t3)">418 securities ranked</span>
-          </div>
-        </div>
-
-        <!-- Current Regime -->
-        <div class="card regime-card">
-          <div class="card-top-bar" id="ov-top-bar" style="background:var(--amber);box-shadow:0 0 12px var(--amber)"></div>
-          <div class="card-title">Current Regime</div>
-          <div class="regime-val Neutral" id="ov-regime">NEUTRAL</div>
-          <div class="regime-gate">Position gate (4-level): <span class="amber" id="ov-gate">50%</span> <span style="font-size:10px;color:var(--t4)" id="ov-gate-level"></span></div>
-
-          <div style="margin-top:10px;display:flex;justify-content:space-between;font-size:10px">
-            <span style="color:var(--t4)">Architecture</span><span>PCA + HMM + PC6</span>
-          </div>
-
-          <div class="gauge-wrap" style="margin-top:10px">
-            <div class="gauge-lbl">Composite Score</div>
-            <div class="gauge-zones"><span class="gz-bear">Bear</span><span class="gz-neutral">Neutral</span><span class="gz-bull">Bull</span></div>
-            <div class="gauge-track">
-              <div class="gauge-needle" id="ov-needle" style="left:50%">
-                <div class="gnv" id="ov-needle-val">0.00</div>
-                <div class="gnl"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- PC6 Biotech Factor -->
-          <div style="margin-top:12px;border-top:1px solid var(--bd);padding-top:10px">
-            <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:6px">
-              <span style="color:var(--t4)">PC6 Biotech Factor</span>
-              <span style="font-weight:600;color:var(--cyan)" id="ov-pc6-val">+0.448</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;font-size:10px">
-              <span style="color:var(--t4)">PC6 Gate</span>
-              <span style="font-weight:600" id="ov-pc6-gate" style="color:var(--cyan)">BULL</span>
-            </div>
-          </div>
-
-          <div style="margin-top:12px;border-top:1px solid var(--bd);padding-top:12px">
-            <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t4);margin-bottom:4px">
-              <span>PCA</span>
-            </div>
-            <div style="display:flex;height:5px;border-radius:3px;overflow:hidden;background:rgba(50,70,140,0.15)">
-              <div id="ov-pca-pc1" style="height:100%;background:#60dcff;opacity:0.85;transition:width 0.8s ease"></div>
-              <div id="ov-pca-pc2" style="height:100%;background:#6090ff;opacity:0.7;transition:width 0.8s ease"></div>
-              <div id="ov-pca-pc3" style="height:100%;background:#4060cc;opacity:0.55;transition:width 0.8s ease"></div>
-            </div>
-            <div style="font-size:9px;color:var(--blue);margin-top:5px" id="ov-pca-line">—</div>
-          </div>
-
-          <div style="margin-top:12px">
-            <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t4);margin-bottom:4px">
-              <span>HMM</span>
-            </div>
-            <div style="position:relative;height:5px;border-radius:3px;background:rgba(50,70,140,0.15)">
-              <div id="ov-hmm-bar" style="position:absolute;top:0;height:100%;width:25%;border-radius:3px;background:var(--blue);opacity:0.7;transition:left 0.8s ease"></div>
-            </div>
-            <div style="font-size:9px;color:var(--blue);margin-top:5px" id="ov-hmm-line">—</div>
-          </div>
-
-          <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--bd)">
-            <div style="font-size:11px;color:var(--t3)" id="ov-regime-since">—</div>
           </div>
         </div>
       </div>
@@ -3127,7 +3101,7 @@ function initParticles(){
 
   function getW(){ return host.getBoundingClientRect().width||host.offsetWidth||host.parentElement.clientWidth||900; }
   let W=getW();
-  const H=240;
+  const H=280;
   host.style.position='relative';
 
   const cvs=document.createElement('canvas');
