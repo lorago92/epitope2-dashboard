@@ -1637,6 +1637,8 @@ async function loadData(){
     }
   }catch{}
   renderAll();
+  // Init particles after first data load
+  if(!window._particlesStarted){window._particlesStarted=true;setTimeout(initParticles,100);}
 }
 
 function renderAll(){
@@ -3181,14 +3183,22 @@ function initParticles(){
     });
   }
 
-  // Pre-spawn
-  const initCount=Math.round(90*(W/900));
+  // Pre-spawn — distribute across the visible bands with realistic state
+  const initCount=Math.round(80*(W/900));
   for(let i=0;i<initCount;i++){
     spawn();
     const d=drops[drops.length-1];
-    d.y=Math.random()*H*0.65;
-    d.opacity=d.maxOpacity*0.6;
-    d.life=20;
+    // Place in top 60% only (ANTIGEN through early CYTOKINE)
+    const yFrac=Math.random()*0.60;
+    d.y=yFrac*H;
+    d.life=Math.round(yFrac*40)+10;
+    // Match opacity to position — deeper = more faded for non-survivors
+    const prog=d.y/H;
+    if(!d.survivesGate && prog>d.fadeAt){
+      d.opacity=d.maxOpacity*Math.pow(0.88,(prog-d.fadeAt)*80);
+    } else {
+      d.opacity=d.maxOpacity*(0.4+yFrac*0.5);
+    }
   }
 
   // Tooltip
@@ -3236,7 +3246,7 @@ function initParticles(){
         ctx.setTransform(1,0,0,1,0,0);ctx.scale(dpr,dpr);
         drops.length=0;
         const cap=Math.round(60*(W/900));
-        for(let i=0;i<cap;i++){spawn();const d=drops[drops.length-1];d.y=Math.random()*H*0.65;d.opacity=d.maxOpacity*0.6;d.life=20;}
+        for(let i=0;i<cap;i++){spawn();const d=drops[drops.length-1];const yf=Math.random()*0.60;d.y=yf*H;d.life=Math.round(yf*40)+10;d.opacity=d.maxOpacity*(0.4+yf*0.5);}
       },150);
     }).observe(host);
   }
@@ -3329,8 +3339,7 @@ function initParticles(){
   setInterval(()=>{const cap=Math.round(70*(W/900));if(drops.length<cap)spawn();},60);
 }
 
-if(document.readyState==='complete'){setTimeout(initParticles,50);}
-else{window.addEventListener('load',()=>setTimeout(initParticles,50));}
+// Particles init moved to after first data load (in loadData callback)
 
 /* ─ AUTO-REFRESH ──────────────────────────────────────────────────── */
 setInterval(loadData,5*60*1000);
