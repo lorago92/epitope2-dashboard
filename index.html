@@ -1155,7 +1155,7 @@ body::after{
               <span style="color:var(--t4)">Threshold</span>
               <span style="font-weight:600;color:var(--t3);font-family:'JetBrains Mono',monospace">&gt; 0 = bullish</span>
             </div>
-            <div style="font-size:9px;color:var(--t4);margin-top:6px">Macro panel → PCA → 6th component → 5d rolling mean → binary gate</div>
+            <div style="font-size:9px;color:var(--t4);margin-top:6px">Macro panel → PCA → 6th component → signal</div>
           </div>
           <div style="background:var(--bd);width:1px"></div>
           <!-- Output: Gate Decision -->
@@ -2175,19 +2175,6 @@ async function renderSignals(r){
         h+=`<td style="padding:7px 10px;text-align:right;color:${rc};font-weight:${isActive?700:400}">${p.regime.toUpperCase()}</td>`;
       });
       h+=`<td style="padding:7px 10px;text-align:right;color:${regimeColor2(regime)};font-weight:700">${regime.toUpperCase()}</td></tr>`;
-
-      // Gate row
-      h+=`<tr style="border-bottom:1px solid rgba(50,70,140,0.06)">
-        <td style="padding:7px 10px;color:var(--t4);font-size:9px">GATE</td>`;
-      stateOrder.forEach(s=>{
-        const p=profiles[s]; if(!p) return;
-        const gc=p.gate===0?'var(--red)':p.gate===1?'var(--cyan)':'var(--amber)';
-        const isActive=parseInt(s)===activeState;
-        h+=`<td style="padding:7px 10px;text-align:right;color:${gc};font-weight:${isActive?700:400}">${(p.gate*100).toFixed(0)}%</td>`;
-      });
-      const livGate=r.position_gate!=null?r.position_gate:(regime==='Bear'?0:regime==='Neutral'?0.5:1);
-      const lgc=livGate===0?'var(--red)':livGate===1?'var(--cyan)':'var(--amber)';
-      h+=`<td style="padding:7px 10px;text-align:right;color:${lgc};font-weight:700">${(livGate*100).toFixed(0)}%</td></tr>`;
 
       // Hist% row
       h+=`<tr>
