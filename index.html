@@ -3096,7 +3096,7 @@ function nav(name,btn){
   },30);
 }
 
-/* ─ TICKER RAIN (Horizontal flow — real ticker data) ───────────── */
+/* ─ TICKER RAIN (Vertical fall through horizontal stage bands) ──── */
 function initParticles(){
   const host=document.getElementById('particle-flow');
   if(!host||host._ready)return;
@@ -3107,7 +3107,6 @@ function initParticles(){
   const H=240;
   host.style.position='relative';
 
-  // Canvas setup
   const cvs=document.createElement('canvas');
   const dpr=window.devicePixelRatio||1;
   cvs.width=W*dpr; cvs.height=H*dpr;
@@ -3116,13 +3115,13 @@ function initParticles(){
   const ctx=cvs.getContext('2d');
   ctx.scale(dpr,dpr);
 
-  // Stage bands (vertical strips)
+  // Stage bands (horizontal strips)
   const bands=[
-    {x:0.00,w:0.18,label:'ANTIGEN·Capture',col:[96,220,255]},
-    {x:0.18,w:0.18,label:'ANTIBODY·Bind',col:[0,255,180]},
-    {x:0.36,w:0.20,label:'AFFINITY·Score',col:[96,144,255]},
-    {x:0.56,w:0.20,label:'CYTOKINE·Gate',col:[255,200,40]},
-    {x:0.76,w:0.24,label:'CASCADE·Execute',col:[176,106,255]},
+    {y:0.00,h:0.14,label:'ANTIGEN·Capture',sub:'418 tickers',col:[96,220,255]},
+    {y:0.14,h:0.18,label:'ANTIBODY·Bind',sub:'418 signals',col:[0,255,180]},
+    {y:0.32,h:0.20,label:'AFFINITY·Score',sub:'20 selected',col:[96,144,255]},
+    {y:0.52,h:0.18,label:'CYTOKINE·Gate',sub:'gate 50%',col:[255,200,40]},
+    {y:0.70,h:0.30,label:'CASCADE·Execute',sub:'BUY 20',col:[176,106,255]},
   ];
 
   // Build ticker pool from real data
@@ -3130,15 +3129,23 @@ function initParticles(){
   function refreshPool(){
     const sig=window.D&&window.D.sig||[];
     if(sig.length>0){
-      tickerPool=sig.map((s,i)=>({
-        ticker:s.ticker,score:s.score||0,rank:i+1,isBuy:i<20,
-      }));
+      tickerPool=sig.map((s,i)=>({ticker:s.ticker,score:s.score||0,rank:i+1,isBuy:i<20}));
     }
+    // Update sub-labels with live data
+    const m=window.D&&window.D.m||{};
+    const _r=window.D&&window.D.r||{};
+    const n=sig.length||418;
+    const nL=m.long_positions||20;
+    const gv=_r.position_gate!=null?Math.round(_r.position_gate*100):50;
+    bands[0].sub=n+' tickers';
+    bands[1].sub=n+' signals';
+    bands[2].sub=nL+' selected';
+    bands[3].sub='gate '+gv+'%';
+    bands[4].sub='BUY '+nL;
   }
   refreshPool();
   setInterval(refreshPool,10000);
 
-  // Drops
   const drops=[];
   let _idx=0;
 
@@ -3156,39 +3163,32 @@ function initParticles(){
     const isBuy=td?td.isBuy:false;
     const rank=td?td.rank:999;
 
-    // BUY tickers pass gate; some WATCH tickers pass proportional to gate
-    const survivesGate=(regime!=='Bear')&&(isBuy||(score>60&&Math.random()<gate*0.3));
-
-    // Speed scales with score — high scorers move faster
-    const speed=(0.8+score/100*2.5)*(W/900);
-
-    // Vertical position — slight randomness, higher scores tend toward center
-    const centerBias=score/100*0.6;
-    const y=H*0.12+Math.random()*(H*0.76)*(1-centerBias)+centerBias*(H*0.3+Math.random()*H*0.2);
+    const survivesGate=(regime!=='Bear')&&(isBuy||(score>70&&Math.random()<gate*0.3));
+    const speed=0.4+score/100*1.2;
+    const fontSize=isBuy?(9+score/100*4):(6+score/100*3);
 
     drops.push({
-      x:-10-Math.random()*60,
-      y,
-      speed,
-      ticker,score,rank,isBuy,survivesGate,
+      x:20+Math.random()*(W-40),
+      y:-8-Math.random()*40,
+      speed,ticker,score,rank,isBuy,survivesGate,
       opacity:0,
-      maxOpacity:0.15+(score/100)*0.75,
-      fadeAt:survivesGate?1.1:(0.56+Math.random()*0.15), // fade at gate if not passing
-      fontSize:isBuy?(9+score/100*3):(7+score/100*2),
+      maxOpacity:0.12+(score/100)*0.78,
+      fadeAt:survivesGate?1.1:(0.52+Math.random()*0.12),
+      fontSize,
       wave:Math.random()*Math.PI*2,
-      waveAmp:1+Math.random()*3,
+      waveAmp:0.5+Math.random()*2,
       life:0,
     });
   }
 
-  // Pre-spawn distributed across the canvas
-  const initCount=Math.round(120*(W/900));
+  // Pre-spawn
+  const initCount=Math.round(60*(W/900));
   for(let i=0;i<initCount;i++){
     spawn();
     const d=drops[drops.length-1];
-    d.x=Math.random()*W;
-    d.opacity=d.maxOpacity*0.7;
-    d.life=30;
+    d.y=Math.random()*H;
+    d.opacity=d.maxOpacity*0.6;
+    d.life=20;
   }
 
   // Tooltip
@@ -3206,7 +3206,7 @@ function initParticles(){
       if(!d.ticker)continue;
       const dx=d.x-mx, dy=d.y-my;
       const dist=dx*dx+dy*dy;
-      if(dist<closestDist&&dist<900){closestDist=dist;closest=d;}
+      if(dist<closestDist&&dist<800){closestDist=dist;closest=d;}
     }
     if(closest){
       hoveredD=closest;
@@ -3214,7 +3214,7 @@ function initParticles(){
       tip.innerHTML=`<span style="color:${ac};font-weight:700">${closest.ticker}</span> <span style="color:rgba(255,255,255,0.4)">#${closest.rank}</span><br><span style="color:rgba(255,255,255,0.5)">Signal</span> <span style="font-weight:600">${closest.score.toFixed(1)}</span>`;
       tip.style.display='block';
       tip.style.left=Math.min(closest.x+15,W-110)+'px';
-      tip.style.top=(closest.y-34)+'px';
+      tip.style.top=Math.max(4,closest.y-34)+'px';
     } else {
       hoveredD=null;
       tip.style.display='none';
@@ -3235,8 +3235,8 @@ function initParticles(){
         cvs.style.width=W+'px';cvs.style.height=H+'px';
         ctx.setTransform(1,0,0,1,0,0);ctx.scale(dpr,dpr);
         drops.length=0;
-        const cap=Math.round(120*(W/900));
-        for(let i=0;i<cap;i++){spawn();const d=drops[drops.length-1];d.x=Math.random()*W;d.opacity=d.maxOpacity*0.7;d.life=30;}
+        const cap=Math.round(60*(W/900));
+        for(let i=0;i<cap;i++){spawn();const d=drops[drops.length-1];d.y=Math.random()*H;d.opacity=d.maxOpacity*0.6;d.life=20;}
       },150);
     }).observe(host);
   }
@@ -3245,94 +3245,80 @@ function initParticles(){
     ctx.clearRect(0,0,W,H);
     const now=performance.now()/1000;
 
-    // Draw stage bands (vertical strips with subtle fill)
+    // Draw horizontal stage bands
     bands.forEach(b=>{
-      const bx=W*b.x, bw=W*b.w;
+      const by=H*b.y, bh=H*b.h;
       ctx.fillStyle=`rgba(${b.col[0]},${b.col[1]},${b.col[2]},0.03)`;
-      ctx.fillRect(bx,0,bw,H);
-      // Separator line
-      if(b.x>0){
+      ctx.fillRect(0,by,W,bh);
+      // Top edge line
+      if(b.y>0){
         ctx.strokeStyle=`rgba(${b.col[0]},${b.col[1]},${b.col[2]},0.08)`;
         ctx.lineWidth=0.5;
-        ctx.beginPath();ctx.moveTo(bx,0);ctx.lineTo(bx,H);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(0,by);ctx.lineTo(W,by);ctx.stroke();
       }
-      // Label at bottom
+      // Label on left
       ctx.font='500 9px JetBrains Mono';
-      ctx.textAlign='center';
-      ctx.fillStyle=`rgba(${b.col[0]},${b.col[1]},${b.col[2]},0.45)`;
-      ctx.fillText(b.label,bx+bw/2,H-8);
+      ctx.textAlign='left';
+      ctx.fillStyle=`rgba(${b.col[0]},${b.col[1]},${b.col[2]},0.4)`;
+      ctx.fillText(b.label,8,by+bh/2+3);
+      // Sub-label on right
+      ctx.textAlign='right';
+      ctx.fillStyle=`rgba(${b.col[0]},${b.col[1]},${b.col[2]},0.25)`;
+      ctx.fillText(b.sub,W-8,by+bh/2+3);
     });
 
-    // Gate line (between CYTOKINE and CASCADE)
-    const gateX=W*0.76;
-    ctx.setLineDash([3,5]);
-    ctx.strokeStyle='rgba(255,200,40,0.25)';
+    // Gate line (between CYTOKINE and CASCADE bands)
+    const gateY=H*0.70;
+    ctx.setLineDash([4,6]);
+    ctx.strokeStyle='rgba(255,200,40,0.3)';
     ctx.lineWidth=1;
-    ctx.beginPath();ctx.moveTo(gateX,4);ctx.lineTo(gateX,H-20);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,gateY);ctx.lineTo(W,gateY);ctx.stroke();
     ctx.setLineDash([]);
 
-    // Sub-labels with live data
-    const sig=window.D&&window.D.sig||[];
-    const m=window.D&&window.D.m||{};
-    const _r=window.D&&window.D.r||{};
-    const nTickers=sig.length||418;
-    const nLong=m.long_positions||20;
-    const gateVal=_r.position_gate!=null?Math.round(_r.position_gate*100):50;
-    ctx.font='9px JetBrains Mono';
-    ctx.textAlign='center';
-    ctx.fillStyle='rgba(96,220,255,0.3)';ctx.fillText(nTickers+' tickers',W*0.09,H-20);
-    ctx.fillStyle='rgba(0,255,180,0.3)';ctx.fillText(nTickers+' signals',W*0.27,H-20);
-    ctx.fillStyle='rgba(96,144,255,0.3)';ctx.fillText(nLong+' selected',W*0.46,H-20);
-    ctx.fillStyle='rgba(255,200,40,0.3)';ctx.fillText('gate '+gateVal+'%',W*0.66,H-20);
-    ctx.fillStyle='rgba(176,106,255,0.3)';ctx.fillText('BUY '+nLong,W*0.88,H-20);
-
-    // Update and draw drops
+    // Update drops
     for(let i=drops.length-1;i>=0;i--){
       const d=drops[i];
       d.life++;
+      d.y+=d.speed;
+      const prog=d.y/H;
 
-      // Move right
-      d.x+=d.speed;
-      const prog=d.x/W;
-
-      // Gentle wave
-      const wave=Math.sin(now*1.2+d.wave)*d.waveAmp;
-      const drawY=d.y+wave;
+      // Gentle horizontal sway
+      const sway=Math.sin(now*1.5+d.wave)*d.waveAmp;
+      const drawX=d.x+sway;
 
       // Fade in
-      if(d.life<20) d.opacity=Math.min(d.life/20,d.maxOpacity);
+      if(d.life<12) d.opacity=Math.min(d.life/12,d.maxOpacity);
 
       // Fade out at gate if not surviving
-      if(prog>d.fadeAt) d.opacity*=0.97;
+      if(prog>d.fadeAt) d.opacity*=0.94;
 
-      // Remove if offscreen or invisible
-      if(d.x>W+30||d.opacity<0.02){
-        drops.splice(i,1);spawn();continue;
-      }
+      // Remove
+      if(d.y>H+20||d.opacity<0.02){drops.splice(i,1);spawn();continue;}
 
-      // Color based on position in pipeline
+      // Color based on vertical position
       let rgb;
-      if(prog<0.18) rgb=bands[0].col;
-      else if(prog<0.36) rgb=lerpC(bands[0].col,bands[1].col,(prog-0.18)/0.18);
-      else if(prog<0.56) rgb=lerpC(bands[1].col,bands[2].col,(prog-0.36)/0.20);
-      else if(prog<0.76) rgb=lerpC(bands[2].col,bands[3].col,(prog-0.56)/0.20);
-      else rgb=d.survivesGate?bands[4].col:lerpC(bands[3].col,[60,70,100],(prog-0.76)/0.24);
+      if(prog<0.14) rgb=bands[0].col;
+      else if(prog<0.32) rgb=lerpC(bands[0].col,bands[1].col,(prog-0.14)/0.18);
+      else if(prog<0.52) rgb=lerpC(bands[1].col,bands[2].col,(prog-0.32)/0.20);
+      else if(prog<0.70) rgb=lerpC(bands[2].col,bands[3].col,(prog-0.52)/0.18);
+      else rgb=d.survivesGate?bands[4].col:lerpC(bands[3].col,[40,45,70],(prog-0.70)/0.30);
 
       const isHov=(hoveredD===d);
-      const sz=d.fontSize*(isHov?1.4:1)*(d.survivesGate&&prog>0.76?1.2:1);
+      const pastGate=prog>0.72;
+      const sz=d.fontSize*(isHov?1.5:1)*(d.survivesGate&&pastGate?1.2:1);
       const op=Math.min(d.opacity*(isHov?1.3:1),0.95);
 
       // Glow for survivors past gate
-      if(d.survivesGate&&prog>0.78){
-        ctx.beginPath();ctx.arc(d.x,drawY,sz*1.2,0,Math.PI*2);
-        ctx.fillStyle=`rgba(${rgb[0]},${rgb[1]},${rgb[2]},${op*0.08})`;ctx.fill();
+      if(d.survivesGate&&pastGate){
+        ctx.beginPath();ctx.arc(drawX,d.y,sz*1.0,0,Math.PI*2);
+        ctx.fillStyle=`rgba(${rgb[0]},${rgb[1]},${rgb[2]},${op*0.1})`;ctx.fill();
       }
 
       // Draw ticker text
       ctx.font=`${d.isBuy?'700':'400'} ${Math.round(sz)}px JetBrains Mono`;
       ctx.textAlign='center';
       ctx.fillStyle=`rgba(${rgb[0]},${rgb[1]},${rgb[2]},${op})`;
-      ctx.fillText(d.ticker,d.x,drawY);
+      ctx.fillText(d.ticker,drawX,d.y);
     }
     requestAnimationFrame(frame);
   }
@@ -3340,7 +3326,7 @@ function initParticles(){
   function lerpC(a,b,t){t=Math.max(0,Math.min(1,t));return a.map((v,i)=>Math.round(v+(b[i]-v)*t));}
 
   requestAnimationFrame(frame);
-  setInterval(()=>{const cap=Math.round(130*(W/900));if(drops.length<cap)spawn();},40);
+  setInterval(()=>{const cap=Math.round(70*(W/900));if(drops.length<cap)spawn();},60);
 }
 
 if(document.readyState==='complete'){setTimeout(initParticles,50);}
