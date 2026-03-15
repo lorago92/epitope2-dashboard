@@ -1125,49 +1125,64 @@ body::after{
           </div>
         </div>
 
-        <!-- Step 4: Regime output → gate -->
-        <!-- Step 4: Regime output → gate (v2: 4-level with PC6) -->
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:16px">
+        <!-- Step 4: Regime output → gate decision (v2: 4-level with PC6) -->
+        <div style="display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;gap:16px;margin-bottom:16px">
+          <!-- Input 1: Macro Regime -->
           <div>
-            <div class="lbl">STEP 4 · REGIME</div>
+            <div class="lbl">INPUT 1 · MACRO REGIME</div>
             <div style="font-size:20px;font-weight:700;margin-top:4px" id="pl-regime">—</div>
-          </div>
-          <div>
-            <div class="lbl">HMM STATE</div>
-            <div style="display:flex;align-items:center;gap:6px;margin-top:4px">
-              <div style="font-size:20px;font-weight:700" id="pl-hmm">—</div>
+            <div style="display:flex;align-items:center;gap:6px;margin-top:6px">
+              <span style="font-size:9px;color:var(--t4)">HMM state</span>
+              <span style="font-size:11px;font-weight:600" id="pl-hmm">—</span>
               <div id="pl-hmm-converged" style="font-size:9px;padding:2px 5px;border-radius:3px;background:rgba(0,255,180,0.08);border:1px solid rgba(0,255,180,0.2);color:var(--cyan)">—</div>
             </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;margin-top:6px;padding-top:6px;border-top:1px solid var(--bd)">
+              <span style="color:var(--t4)">Regime score</span>
+              <span style="font-weight:600;font-family:'JetBrains Mono',monospace" id="pl-composite">—</span>
+            </div>
+            <div style="font-size:9px;color:var(--t4);margin-top:6px">Macro panel → PCA (3 factors) → HMM (4 states) → regime label</div>
           </div>
+          <div style="background:var(--bd);width:1px"></div>
+          <!-- Input 2: Biotech Factor -->
           <div>
-            <div class="lbl">COMPOSITE SCORE</div>
-            <div style="font-size:20px;font-weight:700;margin-top:4px" id="pl-composite">—</div>
-          </div>
-          <div>
-            <div class="lbl">POSITION GATE (4-LEVEL)</div>
-            <div style="font-size:20px;font-weight:700;margin-top:4px" id="pl-gate">—</div>
-          </div>
-        </div>
-        <!-- v2: PC6 biotech factor + stop loss config -->
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding-top:12px;border-top:1px solid var(--bd)">
-          <div>
-            <div class="lbl">PC6 BIOTECH FACTOR</div>
+            <div class="lbl">INPUT 2 · BIOTECH FACTOR</div>
             <div style="font-size:20px;font-weight:700;margin-top:4px" id="pl-pc6">—</div>
-            <div style="font-size:9px;color:var(--t4);margin-top:2px" id="pl-pc6-label">143-ETF PCA · biotech rotation</div>
+            <div style="display:flex;align-items:center;gap:6px;margin-top:6px">
+              <span style="font-size:9px;color:var(--t4)">PC6 gate</span>
+              <span style="font-size:11px;font-weight:600" id="pl-pc6-gate">—</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;margin-top:6px;padding-top:6px;border-top:1px solid var(--bd)">
+              <span style="color:var(--t4)">Threshold</span>
+              <span style="font-weight:600;color:var(--t3);font-family:'JetBrains Mono',monospace">&gt; 0 = bullish</span>
+            </div>
+            <div style="font-size:9px;color:var(--t4);margin-top:6px">Macro panel → PCA → 6th component → 5d rolling mean → binary gate</div>
           </div>
+          <div style="background:var(--bd);width:1px"></div>
+          <!-- Output: Gate Decision -->
           <div>
-            <div class="lbl">PC6 GATE</div>
-            <div style="font-size:20px;font-weight:700;margin-top:4px" id="pl-pc6-gate">—</div>
-            <div style="font-size:9px;color:var(--t4);margin-top:2px">&gt;0 = bullish biotech</div>
-          </div>
-          <div>
-            <div class="lbl">GATE LEVEL</div>
-            <div style="font-size:13px;font-weight:600;margin-top:6px;padding:4px 8px;border-radius:4px;display:inline-block" id="pl-gate-level" style="background:rgba(0,255,180,0.08);border:1px solid rgba(0,255,180,0.2)">—</div>
-          </div>
-          <div>
-            <div class="lbl">STOP LOSS</div>
-            <div style="font-size:20px;font-weight:700;margin-top:4px" id="pl-stop-loss">OFF</div>
-            <div style="font-size:9px;color:var(--t4);margin-top:2px" id="pl-stop-loss-label">Config flag</div>
+            <div class="lbl">OUTPUT · GATE DECISION</div>
+            <div style="font-size:20px;font-weight:700;margin-top:4px" id="pl-gate">—</div>
+            <div style="margin-top:6px">
+              <div style="font-size:13px;font-weight:600;padding:4px 8px;border-radius:4px;display:inline-block" id="pl-gate-level" style="background:rgba(0,255,180,0.08);border:1px solid rgba(0,255,180,0.2)">—</div>
+            </div>
+            <div style="display:grid;grid-template-columns:auto auto auto;gap:0;font-size:8px;font-family:'JetBrains Mono',monospace;text-align:center;border:1px solid var(--bd);border-radius:4px;overflow:hidden;margin-top:8px">
+              <div style="padding:3px 6px;background:rgba(50,70,140,0.08);color:var(--t4)"></div>
+              <div style="padding:3px 6px;background:rgba(50,70,140,0.08);color:var(--cyan);font-weight:600">PC6&gt;0</div>
+              <div style="padding:3px 6px;background:rgba(50,70,140,0.08);color:var(--red)">PC6≤0</div>
+              <div style="padding:3px 6px;color:var(--cyan)">Bull</div>
+              <div style="padding:3px 6px;color:var(--cyan)">100%</div>
+              <div style="padding:3px 6px;color:var(--amber)">50%</div>
+              <div style="padding:3px 6px;color:var(--amber)">Neutral</div>
+              <div style="padding:3px 6px;color:var(--amber)">50%</div>
+              <div style="padding:3px 6px;color:var(--t4)">25%</div>
+              <div style="padding:3px 6px;color:var(--red)">Bear</div>
+              <div style="padding:3px 6px;color:var(--t4)">0%</div>
+              <div style="padding:3px 6px;color:var(--t4)">0%</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;margin-top:8px;padding-top:6px;border-top:1px solid var(--bd)">
+              <span style="color:var(--t4)">Stop loss</span>
+              <span style="font-weight:600;font-family:'JetBrains Mono',monospace" id="pl-stop-loss">OFF</span>
+            </div>
           </div>
         </div>
       </div>
@@ -2078,7 +2093,7 @@ async function renderSignals(r){
     const liveEl=$('pl-zfactors-live');
     if(liveEl){
       const pc6v=r.pc6_value||0;
-      liveEl.innerHTML=zrow('Risk',z1)+zrow('Rates',z2)+zrow('Inflation',z3)+zrow('PC6 Biotech',pc6v);
+      liveEl.innerHTML=zrow('Risk',z1)+zrow('Rates',z2)+zrow('Inflation',z3);
     }
   }
 
@@ -2218,7 +2233,8 @@ async function renderSignals(r){
     const hmEl=$('pl-heatmap');
     if(hmEl && univ.length>0){
       const uniMap={};univ.forEach(u=>{uniMap[u.ticker]={cat:u.cat,tier:u.tier};});
-      const sectors=['Biotechnology','Pharmaceuticals','Life Science Tools','Diagnostics','Medical Devices','Other'];
+      const catMap={'Biotechnology':'Biotech','Pharmaceuticals':'Pharma','Life Science Tools':'Life Sci','Diagnostics':'Diagnostics','Medical Devices':'Med Devices','Other':'Other'};
+      const sectors=['Biotech','Pharma','Life Sci','Diagnostics','Med Devices','Other'];
       const tiers=['large_cap','mid_cap','small_cap','micro_cap'];
       const tierLabels=['Large','Mid','Small','Micro'];
       // Accumulate scores + counts
@@ -2226,7 +2242,7 @@ async function renderSignals(r){
       sectors.forEach(s=>{grid[s]={};counts[s]={};tiers.forEach(t=>{grid[s][t]=0;counts[s][t]=0;});});
       sig.forEach(s=>{
         const u=uniMap[s.ticker];if(!u)return;
-        const cat=u.cat||'Other';const tier=u.tier||'';
+        const cat=catMap[u.cat]||u.cat||'Other';const tier=u.tier||'';
         if(grid[cat]&&grid[cat][tier]!=null){grid[cat][tier]+=s.score;counts[cat][tier]++;}
       });
       // Build z-matrix (avg score), text annotations, and count annotations
@@ -2266,7 +2282,7 @@ async function renderSignals(r){
         xgap:3,ygap:3,
       }],{
         paper_bgcolor:'transparent',plot_bgcolor:'transparent',
-        margin:{l:120,r:50,t:10,b:30},
+        margin:{l:100,r:40,t:10,b:30},
         font:{family:'JetBrains Mono',size:8,color:'rgba(255,255,255,0.4)'},
         xaxis:{side:'bottom',tickfont:{size:9,color:'rgba(255,255,255,0.5)'},showgrid:false},
         yaxis:{tickfont:{size:9,color:'rgba(255,255,255,0.5)'},showgrid:false,autorange:'reversed'},
