@@ -3096,7 +3096,7 @@ function nav(name,btn){
   },30);
 }
 
-/* ─ PARTICLE FLOW (Enhanced animated pipeline) ─────────────────── */
+/* ─ TICKER RAIN (Horizontal flow — real ticker data) ───────────── */
 function initParticles(){
   const host=document.getElementById('particle-flow');
   if(!host||host._ready)return;
@@ -3107,360 +3107,240 @@ function initParticles(){
   const H=240;
   host.style.position='relative';
 
-  function makeStages(w){ return [
-    {name:'ANTIGEN·Capture', col:'#60dcff', x:w*0.06},
-    {name:'ANTIBODY·Bind',   col:'#00ffb4', x:w*0.26},
-    {name:'AFFINITY·Score',  col:'#6090ff', x:w*0.50},
-    {name:'CYTOKINE·Gate',   col:'#ffc828', x:w*0.74},
-    {name:'CASCADE·Execute', col:'#b06aff', x:w*0.92},
-  ]; }
-  let STAGES=makeStages(W);
-  const CY=H*0.50;
-
-  // ── Static SVG layer (nodes + lines + barrier) ──
-  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
-  svg.setAttribute('width','100%'); svg.setAttribute('height',H);
-  svg.style.cssText='position:absolute;top:0;left:0;pointer-events:none';
-  host.appendChild(svg);
-
-  function drawStatic(){
-    svg.innerHTML='';
-    const regime=(window.D&&window.D.r&&window.D.r.regime)||'Neutral';
-    const m=window.D&&window.D.m||{};
-    const sig=window.D&&window.D.sig||[];
-    const uniTotal=sig.length||418;
-    const nLong=m.long_positions||0;
-    const nWatch=sig.filter(s=>s.action==='WATCH').length;
-    const nAvoid=uniTotal-nLong-nWatch;
-    const _r=window.D&&window.D.r||{};
-    const gateVal=_r.position_gate!=null?Math.round(_r.position_gate*100):50;
-
-    const sublabels=[
-      `${uniTotal} tickers`,
-      `signals for ${uniTotal} tickers`,
-      `${uniTotal} scored · ${nLong||20} selected`,
-      `gate ${gateVal}%`,
-      `BUY ${nLong} · WATCH ${nWatch} · AVOID ${nAvoid}`,
-    ];
-
-    // Flowing connection lines with gradient
-    const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
-    for(let i=0;i<4;i++){
-      const grad=document.createElementNS('http://www.w3.org/2000/svg','linearGradient');
-      grad.setAttribute('id',`sg${i}`);grad.setAttribute('x1','0%');grad.setAttribute('x2','100%');
-      const s1=document.createElementNS('http://www.w3.org/2000/svg','stop');
-      s1.setAttribute('offset','0%');s1.setAttribute('stop-color',STAGES[i].col);s1.setAttribute('stop-opacity','0.3');
-      const s2=document.createElementNS('http://www.w3.org/2000/svg','stop');
-      s2.setAttribute('offset','100%');s2.setAttribute('stop-color',STAGES[i+1].col);s2.setAttribute('stop-opacity','0.3');
-      grad.appendChild(s1);grad.appendChild(s2);defs.appendChild(grad);
-    }
-    svg.appendChild(defs);
-
-    for(let i=0;i<4;i++){
-      const l=document.createElementNS('http://www.w3.org/2000/svg','line');
-      l.setAttribute('x1',STAGES[i].x);l.setAttribute('y1',CY);
-      l.setAttribute('x2',STAGES[i+1].x);l.setAttribute('y2',CY);
-      l.setAttribute('stroke',`url(#sg${i})`);l.setAttribute('stroke-width','2');
-      svg.appendChild(l);
-    }
-
-    // CYTOKINE·Gate barrier lines
-    const gx=STAGES[3].x;
-    [{y1:H*0.06,y2:CY-22},{y1:CY+22,y2:H*0.94}].forEach(pos=>{
-      const dl=document.createElementNS('http://www.w3.org/2000/svg','line');
-      dl.setAttribute('x1',gx);dl.setAttribute('y1',pos.y1);
-      dl.setAttribute('x2',gx);dl.setAttribute('y2',pos.y2);
-      dl.setAttribute('stroke','rgba(255,200,40,0.25)');
-      dl.setAttribute('stroke-width','1');dl.setAttribute('stroke-dasharray','3,5');
-      svg.appendChild(dl);
-    });
-
-    STAGES.forEach((s,i)=>{
-      // Outer pulse ring (animated via CSS)
-      const pulse=document.createElementNS('http://www.w3.org/2000/svg','circle');
-      pulse.setAttribute('cx',s.x);pulse.setAttribute('cy',CY);pulse.setAttribute('r',18);
-      pulse.setAttribute('fill','none');pulse.setAttribute('stroke',s.col);
-      pulse.setAttribute('stroke-width','0.5');pulse.setAttribute('opacity','0.2');
-      pulse.innerHTML=`<animate attributeName="r" values="16;22;16" dur="${3+i*0.4}s" repeatCount="indefinite"/>
-        <animate attributeName="opacity" values="0.25;0.08;0.25" dur="${3+i*0.4}s" repeatCount="indefinite"/>`;
-      svg.appendChild(pulse);
-      // Inner ring
-      const ring=document.createElementNS('http://www.w3.org/2000/svg','circle');
-      ring.setAttribute('cx',s.x);ring.setAttribute('cy',CY);ring.setAttribute('r',14);
-      ring.setAttribute('fill','none');ring.setAttribute('stroke',s.col);ring.setAttribute('stroke-width','1.2');ring.setAttribute('opacity','0.35');svg.appendChild(ring);
-      // Core dot with glow
-      const glow=document.createElementNS('http://www.w3.org/2000/svg','circle');
-      glow.setAttribute('cx',s.x);glow.setAttribute('cy',CY);glow.setAttribute('r',8);
-      glow.setAttribute('fill',s.col);glow.setAttribute('opacity','0.08');svg.appendChild(glow);
-      const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
-      dot.setAttribute('cx',s.x);dot.setAttribute('cy',CY);dot.setAttribute('r',4);
-      dot.setAttribute('fill',s.col);dot.setAttribute('opacity','0.9');svg.appendChild(dot);
-      // Stage name
-      const t=document.createElementNS('http://www.w3.org/2000/svg','text');
-      t.setAttribute('x',s.x);t.setAttribute('y',CY+34);t.setAttribute('text-anchor','middle');
-      t.setAttribute('font-family','JetBrains Mono,monospace');t.setAttribute('font-size','10');
-      t.setAttribute('fill',s.col);t.setAttribute('opacity','0.75');t.textContent=s.name;svg.appendChild(t);
-      // Sub-label
-      const sub=document.createElementNS('http://www.w3.org/2000/svg','text');
-      sub.setAttribute('x',s.x);sub.setAttribute('y',CY+47);sub.setAttribute('text-anchor','middle');
-      sub.setAttribute('font-family','Outfit,sans-serif');sub.setAttribute('font-size','10');
-      sub.setAttribute('fill',s.col);sub.setAttribute('opacity','0.4');sub.textContent=sublabels[i];svg.appendChild(sub);
-    });
-  }
-  drawStatic();
-  setInterval(drawStatic,5000);
-
-  // ── Canvas particle layer ──
+  // Canvas setup
   const cvs=document.createElement('canvas');
   const dpr=window.devicePixelRatio||1;
-  W=getW();
-  STAGES=makeStages(W);
   cvs.width=W*dpr; cvs.height=H*dpr;
-  cvs.style.cssText=`position:absolute;top:0;left:0;width:${W}px;height:${H}px;pointer-events:none`;
+  cvs.style.cssText=`width:${W}px;height:${H}px;display:block`;
   host.appendChild(cvs);
   const ctx=cvs.getContext('2d');
   ctx.scale(dpr,dpr);
 
-  // Resize observer
+  // Stage bands (vertical strips)
+  const bands=[
+    {x:0.00,w:0.18,label:'ANTIGEN·Capture',col:[96,220,255]},
+    {x:0.18,w:0.18,label:'ANTIBODY·Bind',col:[0,255,180]},
+    {x:0.36,w:0.20,label:'AFFINITY·Score',col:[96,144,255]},
+    {x:0.56,w:0.20,label:'CYTOKINE·Gate',col:[255,200,40]},
+    {x:0.76,w:0.24,label:'CASCADE·Execute',col:[176,106,255]},
+  ];
+
+  // Build ticker pool from real data
+  let tickerPool=[];
+  function refreshPool(){
+    const sig=window.D&&window.D.sig||[];
+    if(sig.length>0){
+      tickerPool=sig.map((s,i)=>({
+        ticker:s.ticker,score:s.score||0,rank:i+1,isBuy:i<20,
+      }));
+    }
+  }
+  refreshPool();
+  setInterval(refreshPool,10000);
+
+  // Drops
+  const drops=[];
+  let _idx=0;
+
+  function spawn(){
+    const regime=(window.D&&window.D.r&&window.D.r.regime)||'Neutral';
+    const gate=(window.D&&window.D.r&&window.D.r.position_gate!=null)?window.D.r.position_gate:0.5;
+
+    let td=null;
+    if(tickerPool.length>0){
+      td=tickerPool[_idx%tickerPool.length];
+      _idx++;
+    }
+    const score=td?td.score:(Math.random()*100);
+    const ticker=td?td.ticker:'';
+    const isBuy=td?td.isBuy:false;
+    const rank=td?td.rank:999;
+
+    // BUY tickers pass gate; some WATCH tickers pass proportional to gate
+    const survivesGate=(regime!=='Bear')&&(isBuy||(score>60&&Math.random()<gate*0.3));
+
+    // Speed scales with score — high scorers move faster
+    const speed=(0.25+score/100*0.9)*(W/900);
+
+    // Vertical position — slight randomness, higher scores tend toward center
+    const centerBias=score/100*0.6;
+    const y=H*0.12+Math.random()*(H*0.76)*(1-centerBias)+centerBias*(H*0.3+Math.random()*H*0.2);
+
+    drops.push({
+      x:-10-Math.random()*60,
+      y,
+      speed,
+      ticker,score,rank,isBuy,survivesGate,
+      opacity:0,
+      maxOpacity:0.15+(score/100)*0.75,
+      fadeAt:survivesGate?1.1:(0.56+Math.random()*0.15), // fade at gate if not passing
+      fontSize:isBuy?(9+score/100*3):(7+score/100*2),
+      wave:Math.random()*Math.PI*2,
+      waveAmp:1+Math.random()*3,
+      life:0,
+    });
+  }
+
+  // Pre-spawn distributed across the canvas
+  const initCount=Math.round(50*(W/900));
+  for(let i=0;i<initCount;i++){
+    spawn();
+    const d=drops[drops.length-1];
+    d.x=Math.random()*W;
+    d.opacity=d.maxOpacity*0.7;
+    d.life=30;
+  }
+
+  // Tooltip
+  const tip=document.createElement('div');
+  tip.style.cssText='position:absolute;pointer-events:none;background:rgba(6,10,28,0.92);border:1px solid rgba(176,106,255,0.25);border-radius:6px;padding:5px 9px;font-family:JetBrains Mono,monospace;font-size:10px;color:#fff;display:none;z-index:10;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,0.4)';
+  host.appendChild(tip);
+  let hoveredD=null;
+
+  cvs.style.cursor='crosshair';
+  cvs.addEventListener('mousemove',(e)=>{
+    const rect=cvs.getBoundingClientRect();
+    const mx=e.clientX-rect.left, my=e.clientY-rect.top;
+    let closest=null, closestDist=Infinity;
+    for(const d of drops){
+      if(!d.ticker)continue;
+      const dx=d.x-mx, dy=d.y-my;
+      const dist=dx*dx+dy*dy;
+      if(dist<closestDist&&dist<900){closestDist=dist;closest=d;}
+    }
+    if(closest){
+      hoveredD=closest;
+      const ac=closest.isBuy?'#b06aff':closest.score>50?'#ffc828':'#607090';
+      tip.innerHTML=`<span style="color:${ac};font-weight:700">${closest.ticker}</span> <span style="color:rgba(255,255,255,0.4)">#${closest.rank}</span><br><span style="color:rgba(255,255,255,0.5)">Signal</span> <span style="font-weight:600">${closest.score.toFixed(1)}</span>`;
+      tip.style.display='block';
+      tip.style.left=Math.min(closest.x+15,W-110)+'px';
+      tip.style.top=(closest.y-34)+'px';
+    } else {
+      hoveredD=null;
+      tip.style.display='none';
+    }
+  });
+  cvs.addEventListener('mouseleave',()=>{hoveredD=null;tip.style.display='none';});
+
+  // Resize
   if(window.ResizeObserver){
-    let _resizeTimer=null;
+    let _rt=null;
     new ResizeObserver(()=>{
       const nw=getW();
       if(Math.abs(nw-W)<4)return;
-      clearTimeout(_resizeTimer);
-      _resizeTimer=setTimeout(()=>{
-        W=nw; STAGES=makeStages(W);
-        cvs.width=W*dpr; cvs.height=H*dpr;
-        cvs.style.width=W+'px'; cvs.style.height=H+'px';
-        ctx.setTransform(1,0,0,1,0,0); ctx.scale(dpr,dpr);
-        drawStatic();
-        particles.length=0;
-        const cap=Math.round(80*(W/900));
-        for(let i=0;i<cap;i++){spawn();const p=particles[particles.length-1];const f=Math.random();p.x=STAGES[0].x+f*(STAGES[4].x-STAGES[0].x);p.progress=f;p.life=f*80;p.opacity=Math.min(p.life/12,0.85);}
+      clearTimeout(_rt);
+      _rt=setTimeout(()=>{
+        W=nw;
+        cvs.width=W*dpr;cvs.height=H*dpr;
+        cvs.style.width=W+'px';cvs.style.height=H+'px';
+        ctx.setTransform(1,0,0,1,0,0);ctx.scale(dpr,dpr);
+        drops.length=0;
+        const cap=Math.round(50*(W/900));
+        for(let i=0;i<cap;i++){spawn();const d=drops[drops.length-1];d.x=Math.random()*W;d.opacity=d.maxOpacity*0.7;d.life=30;}
       },150);
     }).observe(host);
   }
 
-  // ── Particle pool — real ticker data ──
-  const particles=[];
-  const stageColors=[
-    [96,220,255],   // ANTIGEN — light blue
-    [0,255,180],    // ANTIBODY — cyan/green
-    [96,144,255],   // AFFINITY — blue
-    [255,200,40],   // CYTOKINE — amber
-    [176,106,255],   // CASCADE — purple (Bear) or [0,255,180] (Bull)
-  ];
-
-  function lerpColor(c1,c2,t){return c1.map((v,i)=>Math.round(v+(c2[i]-v)*t));}
-
-  function getColorAtProgress(prog,passed){
-    if(!passed){return [60,70,100];}
-    if(prog<0.25) return lerpColor(stageColors[0],stageColors[1],prog/0.25);
-    if(prog<0.50) return lerpColor(stageColors[1],stageColors[2],(prog-0.25)/0.25);
-    if(prog<0.75) return lerpColor(stageColors[2],stageColors[3],(prog-0.50)/0.25);
-    const regime=(window.D&&window.D.r&&window.D.r.regime)||'Neutral';
-    const endCol=(regime==='Bear')?[255,50,80]:[0,255,180];
-    return lerpColor(stageColors[3],endCol,(prog-0.75)/0.25);
-  }
-
-  // Build ticker pool from real signal data
-  let tickerPool=[];
-  function refreshTickerPool(){
-    const sig=window.D&&window.D.sig||[];
-    if(sig.length>0){
-      tickerPool=sig.map((s,i)=>({
-        ticker:s.ticker,
-        score:s.score||0,
-        rank:i+1,
-        action:i<20?'BUY':i<60?'WATCH':'AVOID',
-        isBuy:i<20,
-      }));
-    }
-  }
-  refreshTickerPool();
-  setInterval(refreshTickerPool,10000);
-
-  let _spawnIdx=0;
-  function spawn(){
-    const regime=(window.D&&window.D.r&&window.D.r.regime)||'Neutral';
-    const gate=(window.D&&window.D.r&&window.D.r.position_gate!=null)?window.D.r.position_gate:0.5;
-    const x0=STAGES[0].x;
-    const x4=STAGES[4].x;
-    const totalDist=x4-x0;
-
-    // Pick a real ticker (cycle through pool, or random if no data)
-    let td=null;
-    if(tickerPool.length>0){
-      td=tickerPool[_spawnIdx%tickerPool.length];
-      _spawnIdx++;
-    }
-    const score=td?td.score:(Math.random()*100);
-    const isBuy=td?td.isBuy:false;
-    const ticker=td?td.ticker:'';
-    const rank=td?td.rank:999;
-
-    // Size by score: top scorers are bigger
-    const baseSize=0.8+(score/100)*2.5;
-    const lane=(Math.random()-0.5)*H*0.28;
-    const speed=totalDist/(350+Math.random()*250);
-    // BUY tickers pass the gate; others deflect (unless gate=100%)
-    const passesGate=(regime!=='Bear')&&(isBuy||(Math.random()<gate*0.3));
-
-    particles.push({
-      x:x0-Math.random()*30,
-      y:CY+lane,
-      baseY:CY+lane,
-      speed,
-      progress:0,
-      passesGate,
-      deflected:false,
-      deflectY:0,
-      opacity:0,
-      life:0,
-      size:baseSize,
-      score,
-      ticker,
-      rank,
-      isBuy,
-      action:td?td.action:'AVOID',
-      wave:Math.random()*Math.PI*2,
-      waveAmp:1.5+Math.random()*5,
-      waveFreq:1.5+Math.random()*2,
-      tail:[],
-    });
-  }
-
-  // Pre-spawn distributed
-  const initCount=Math.round(80*(W/900));
-  for(let i=0;i<initCount;i++){
-    spawn();
-    const p=particles[particles.length-1];
-    const f=Math.random();
-    const x0=STAGES[0].x,x4=STAGES[4].x;
-    p.x=x0+f*(x4-x0);
-    p.progress=f;
-    p.life=f*80;
-    p.opacity=Math.min(p.life/12,0.85);
-    if(!p.passesGate&&p.progress>0.72){p.deflected=true;p.deflectY=(Math.random()>0.5?1:-1)*(25+Math.random()*30);}
-  }
-
-  // ── Tooltip layer ──
-  const tip=document.createElement('div');
-  tip.style.cssText='position:absolute;pointer-events:none;background:rgba(6,10,28,0.92);border:1px solid rgba(0,255,180,0.25);border-radius:6px;padding:5px 9px;font-family:JetBrains Mono,monospace;font-size:10px;color:#fff;display:none;z-index:10;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,0.4)';
-  host.appendChild(tip);
-  let hoveredP=null;
-
-  // Enable pointer events on canvas for hover
-  cvs.style.pointerEvents='auto';
-  cvs.style.cursor='crosshair';
-
-  cvs.addEventListener('mousemove',(e)=>{
-    const rect=cvs.getBoundingClientRect();
-    const mx=(e.clientX-rect.left);
-    const my=(e.clientY-rect.top);
-    let closest=null, closestDist=Infinity;
-    for(const p of particles){
-      const dx=p.x-mx, dy=p.y-my;
-      const d=dx*dx+dy*dy;
-      if(d<closestDist&&d<400){closestDist=d;closest=p;}
-    }
-    if(closest&&closest.ticker){
-      hoveredP=closest;
-      const ac=closest.isBuy?'#00ffb4':closest.action==='WATCH'?'#ffc828':'#607090';
-      tip.innerHTML=`<span style="color:${ac};font-weight:700">${closest.ticker}</span> <span style="color:rgba(255,255,255,0.4)">#${closest.rank}</span><br><span style="color:rgba(255,255,255,0.5)">Signal</span> <span style="font-weight:600">${closest.score.toFixed(1)}</span> <span style="color:${ac};font-size:9px">${closest.action}</span>`;
-      tip.style.display='block';
-      tip.style.left=Math.min(closest.x+12,W-120)+'px';
-      tip.style.top=(closest.y-38)+'px';
-      tip.style.borderColor=ac.replace(')',',0.3)').replace('rgb','rgba');
-    } else {
-      hoveredP=null;
-      tip.style.display='none';
-    }
-  });
-  cvs.addEventListener('mouseleave',()=>{hoveredP=null;tip.style.display='none';});
-
   function frame(){
     ctx.clearRect(0,0,W,H);
     const now=performance.now()/1000;
-    const x0=STAGES[0].x,x4=STAGES[4].x,totalDist=x4-x0;
-    const gateX=STAGES[3].x;
 
-    for(let i=particles.length-1;i>=0;i--){
-      const p=particles[i];
-      p.life++;
+    // Draw stage bands (vertical strips with subtle fill)
+    bands.forEach(b=>{
+      const bx=W*b.x, bw=W*b.w;
+      ctx.fillStyle=`rgba(${b.col[0]},${b.col[1]},${b.col[2]},0.03)`;
+      ctx.fillRect(bx,0,bw,H);
+      // Separator line
+      if(b.x>0){
+        ctx.strokeStyle=`rgba(${b.col[0]},${b.col[1]},${b.col[2]},0.08)`;
+        ctx.lineWidth=0.5;
+        ctx.beginPath();ctx.moveTo(bx,0);ctx.lineTo(bx,H);ctx.stroke();
+      }
+      // Label at bottom
+      ctx.font='500 9px JetBrains Mono';
+      ctx.textAlign='center';
+      ctx.fillStyle=`rgba(${b.col[0]},${b.col[1]},${b.col[2]},0.45)`;
+      ctx.fillText(b.label,bx+bw/2,H-8);
+    });
+
+    // Gate line (between CYTOKINE and CASCADE)
+    const gateX=W*0.76;
+    ctx.setLineDash([3,5]);
+    ctx.strokeStyle='rgba(255,200,40,0.25)';
+    ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(gateX,4);ctx.lineTo(gateX,H-20);ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Sub-labels with live data
+    const sig=window.D&&window.D.sig||[];
+    const m=window.D&&window.D.m||{};
+    const _r=window.D&&window.D.r||{};
+    const nTickers=sig.length||418;
+    const nLong=m.long_positions||20;
+    const gateVal=_r.position_gate!=null?Math.round(_r.position_gate*100):50;
+    ctx.font='9px JetBrains Mono';
+    ctx.textAlign='center';
+    ctx.fillStyle='rgba(96,220,255,0.3)';ctx.fillText(nTickers+' tickers',W*0.09,H-20);
+    ctx.fillStyle='rgba(0,255,180,0.3)';ctx.fillText(nTickers+' signals',W*0.27,H-20);
+    ctx.fillStyle='rgba(96,144,255,0.3)';ctx.fillText(nLong+' selected',W*0.46,H-20);
+    ctx.fillStyle='rgba(255,200,40,0.3)';ctx.fillText('gate '+gateVal+'%',W*0.66,H-20);
+    ctx.fillStyle='rgba(176,106,255,0.3)';ctx.fillText('BUY '+nLong,W*0.88,H-20);
+
+    // Update and draw drops
+    for(let i=drops.length-1;i>=0;i--){
+      const d=drops[i];
+      d.life++;
+
+      // Move right
+      d.x+=d.speed;
+      const prog=d.x/W;
+
+      // Gentle wave
+      const wave=Math.sin(now*1.2+d.wave)*d.waveAmp;
+      const drawY=d.y+wave;
 
       // Fade in
-      if(p.life<15) p.opacity=Math.min(p.life/15,0.85);
+      if(d.life<20) d.opacity=Math.min(d.life/20,d.maxOpacity);
 
-      // Move
-      p.x+=p.speed;
-      p.progress=(p.x-x0)/totalDist;
+      // Fade out at gate if not surviving
+      if(prog>d.fadeAt) d.opacity*=0.97;
 
-      // Wave motion
-      const wave=Math.sin(now*p.waveFreq+p.wave)*p.waveAmp;
-
-      // Gate interaction
-      if(!p.deflected&&!p.passesGate&&p.x>=gateX-5){
-        p.deflected=true;
-        p.deflectY=(p.y>CY?1:-1)*(25+Math.random()*35);
-      }
-      if(p.deflected){
-        p.y+=(p.baseY+p.deflectY-p.y)*0.04;
-        p.opacity*=0.985;
-      } else {
-        p.y=p.baseY+wave*0.4;
+      // Remove if offscreen or invisible
+      if(d.x>W+30||d.opacity<0.02){
+        drops.splice(i,1);spawn();continue;
       }
 
-      // Remove if offscreen or faded
-      if(p.x>x4+40||p.opacity<0.02){
-        particles.splice(i,1);spawn();continue;
+      // Color based on position in pipeline
+      let rgb;
+      if(prog<0.18) rgb=bands[0].col;
+      else if(prog<0.36) rgb=lerpC(bands[0].col,bands[1].col,(prog-0.18)/0.18);
+      else if(prog<0.56) rgb=lerpC(bands[1].col,bands[2].col,(prog-0.36)/0.20);
+      else if(prog<0.76) rgb=lerpC(bands[2].col,bands[3].col,(prog-0.56)/0.20);
+      else rgb=d.survivesGate?bands[4].col:lerpC(bands[3].col,[60,70,100],(prog-0.76)/0.24);
+
+      const isHov=(hoveredD===d);
+      const sz=d.fontSize*(isHov?1.4:1)*(d.survivesGate&&prog>0.76?1.2:1);
+      const op=Math.min(d.opacity*(isHov?1.3:1),0.95);
+
+      // Glow for survivors past gate
+      if(d.survivesGate&&prog>0.78){
+        ctx.beginPath();ctx.arc(d.x,drawY,sz*1.2,0,Math.PI*2);
+        ctx.fillStyle=`rgba(${rgb[0]},${rgb[1]},${rgb[2]},${op*0.08})`;ctx.fill();
       }
 
-      // Store trail
-      p.tail.push({x:p.x,y:p.y});
-      if(p.tail.length>6)p.tail.shift();
-
-      // Color + size based on progress
-      const rgb=getColorAtProgress(Math.max(0,Math.min(1,p.progress)),!p.deflected);
-      const isHovered=(hoveredP===p);
-      const brighten=(!p.deflected&&p.progress>0.75)?1.3:1;
-      const sz=p.size*(p.deflected?0.5:(p.progress>0.75?1.4:1))*(isHovered?2:1);
-      const op=Math.min(p.opacity*brighten,0.95);
-
-      // Draw trail
-      if(p.tail.length>2&&!p.deflected){
-        for(let t=0;t<p.tail.length-1;t++){
-          const tp=p.tail[t];
-          const tOp=op*(t/p.tail.length)*0.25;
-          ctx.beginPath();
-          ctx.arc(tp.x,tp.y,sz*0.4,0,Math.PI*2);
-          ctx.fillStyle=`rgba(${rgb[0]},${rgb[1]},${rgb[2]},${tOp})`;
-          ctx.fill();
-        }
-      }
-
-      // Draw glow
-      ctx.beginPath();
-      ctx.arc(p.x,p.y,sz*(isHovered?4:3),0,Math.PI*2);
-      ctx.fillStyle=`rgba(${rgb[0]},${rgb[1]},${rgb[2]},${op*(isHovered?0.2:0.1)})`;
-      ctx.fill();
-      // Draw dot
-      ctx.beginPath();
-      ctx.arc(p.x,p.y,sz,0,Math.PI*2);
+      // Draw ticker text
+      ctx.font=`${d.isBuy?'700':'400'} ${Math.round(sz)}px JetBrains Mono`;
+      ctx.textAlign='center';
       ctx.fillStyle=`rgba(${rgb[0]},${rgb[1]},${rgb[2]},${op})`;
-      ctx.fill();
-
-      // Draw ticker label for BUY tickers past the gate (small, non-intrusive)
-      if(p.isBuy&&!p.deflected&&p.progress>0.78&&p.ticker&&p.size>2){
-        ctx.font='7px JetBrains Mono';
-        ctx.fillStyle=`rgba(0,255,180,${op*0.5})`;
-        ctx.fillText(p.ticker,p.x+sz+3,p.y+3);
-      }
+      ctx.fillText(d.ticker,d.x,drawY);
     }
     requestAnimationFrame(frame);
   }
+
+  function lerpC(a,b,t){t=Math.max(0,Math.min(1,t));return a.map((v,i)=>Math.round(v+(b[i]-v)*t));}
+
   requestAnimationFrame(frame);
-  setInterval(()=>{const cap=Math.round(85*(W/900));if(particles.length<cap)spawn();},80);
+  setInterval(()=>{const cap=Math.round(55*(W/900));if(drops.length<cap)spawn();},100);
 }
 
 if(document.readyState==='complete'){setTimeout(initParticles,50);}
