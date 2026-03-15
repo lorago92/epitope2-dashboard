@@ -1707,10 +1707,10 @@ function renderOverview(m,r,p){
   if(bw)bw.style.width=watchPct.toFixed(1)+'%';
   if(ba)ba.style.width=avoidPct.toFixed(1)+'%';
   // Top/worst signal from D.sig
-  const sig=window.D&&window.D.sig||[];
-  if(sig.length>0){
-    txt('ov-top-sig',`${sig[0].ticker} · ${sig[0].score.toFixed(1)}`);
-    txt('ov-worst-sig',`${sig[sig.length-1].ticker} · ${sig[sig.length-1].score.toFixed(1)}`);
+  const _sigAll=window.D&&window.D.sig||[];
+  if(_sigAll.length>0){
+    txt('ov-top-sig',`${_sigAll[0].ticker} · ${_sigAll[0].score.toFixed(1)}`);
+    txt('ov-worst-sig',`${_sigAll[_sigAll.length-1].ticker} · ${_sigAll[_sigAll.length-1].score.toFixed(1)}`);
   }
 
   // Portfolio row — matches Portfolio page card
@@ -1799,26 +1799,6 @@ function renderOverview(m,r,p){
     }
   }
 
-  // Signal Strength card
-  const sig=D.sig||[
-    {ticker:'RXRX',score:0.91},{ticker:'FOLD',score:0.87},{ticker:'ARQT',score:0.84},
-    {ticker:'FATE',score:0.12},{ticker:'SNDX',score:0.09},{ticker:'TBPH',score:0.06},
-  ];
-  const maxS=sig.length?Math.max(...sig.map(s=>Math.abs(s.score)),0.01):1;
-  function sigRow(s,isTop){
-    const bar=Math.round(Math.abs(s.score)/maxS*100);
-    const col=isTop?'var(--cyan)':'var(--red)';
-    return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
-      <span style="font-size:10px;color:var(--t1);width:38px;flex-shrink:0;font-family:'JetBrains Mono',monospace">${s.ticker}</span>
-      <div style="flex:1;height:4px;border-radius:2px;background:rgba(50,70,140,0.15);overflow:hidden">
-        <div style="width:${bar}%;height:100%;background:${col};opacity:0.75;border-radius:2px"></div>
-      </div>
-      <span style="font-size:10px;color:${col};width:34px;text-align:right;flex-shrink:0">${s.score.toFixed(3)}</span>
-    </div>`;
-  }
-  const top3=sig.slice(0,3), bot3=sig.slice(-3).reverse();
-  set('sig-top', top3.map(s=>sigRow(s,true)).join(''));
-  set('sig-bot', bot3.map(s=>sigRow(s,false)).join(''));
 }
 
 /* ─ PORTFOLIO ─────────────────────────────────────────────────────── */
