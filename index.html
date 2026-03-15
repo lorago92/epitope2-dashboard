@@ -3096,7 +3096,7 @@ function nav(name,btn){
   },30);
 }
 
-/* ─ PARTICLE FLOW (SVG-based) ────────────────────────────────────── */
+/* ─ PARTICLE FLOW (Enhanced animated pipeline) ─────────────────── */
 function initParticles(){
   const host=document.getElementById('particle-flow');
   if(!host||host._ready)return;
@@ -3115,8 +3115,6 @@ function initParticles(){
     {name:'CASCADE·Execute', col:'#ff3250', x:w*0.92},
   ]; }
   let STAGES=makeStages(W);
-  // Probability of spawning in each segment — tapers toward CASCADE
-  const SEG_WEIGHT=[0.40, 0.28, 0.18, 0.14];
   const CY=H*0.50;
 
   // ── Static SVG layer (nodes + lines + barrier) ──
@@ -3127,64 +3125,86 @@ function initParticles(){
 
   function drawStatic(){
     svg.innerHTML='';
-    const regime=(window.D&&window.D.r&&window.D.r.regime)||'Bear';
+    const regime=(window.D&&window.D.r&&window.D.r.regime)||'Neutral';
     const m=window.D&&window.D.m||{};
     const sig=window.D&&window.D.sig||[];
     const uniTotal=sig.length||418;
     const nLong=m.long_positions||0;
-    const nWatch=sig.filter(s=>s.action==='WATCH'||s.final_action==='WATCH').length;
+    const nWatch=sig.filter(s=>s.action==='WATCH').length;
     const nAvoid=uniTotal-nLong-nWatch;
-    const gate=regime==='Bull'?'100%':regime==='Neutral'?'50%':'0%';
+    const _r=window.D&&window.D.r||{};
+    const gateVal=_r.position_gate!=null?Math.round(_r.position_gate*100):50;
 
     const sublabels=[
       `${uniTotal} tickers`,
-      `signals detected for ${uniTotal} tickers`,
-      `${uniTotal} tickers scored · ${nLong||20} selected`,
-      `position gate ${gate}`,
+      `signals for ${uniTotal} tickers`,
+      `${uniTotal} scored · ${nLong||20} selected`,
+      `gate ${gateVal}%`,
       `BUY ${nLong} · WATCH ${nWatch} · AVOID ${nAvoid}`,
     ];
+
+    // Flowing connection lines with gradient
+    const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+    for(let i=0;i<4;i++){
+      const grad=document.createElementNS('http://www.w3.org/2000/svg','linearGradient');
+      grad.setAttribute('id',`sg${i}`);grad.setAttribute('x1','0%');grad.setAttribute('x2','100%');
+      const s1=document.createElementNS('http://www.w3.org/2000/svg','stop');
+      s1.setAttribute('offset','0%');s1.setAttribute('stop-color',STAGES[i].col);s1.setAttribute('stop-opacity','0.3');
+      const s2=document.createElementNS('http://www.w3.org/2000/svg','stop');
+      s2.setAttribute('offset','100%');s2.setAttribute('stop-color',STAGES[i+1].col);s2.setAttribute('stop-opacity','0.3');
+      grad.appendChild(s1);grad.appendChild(s2);defs.appendChild(grad);
+    }
+    svg.appendChild(defs);
 
     for(let i=0;i<4;i++){
       const l=document.createElementNS('http://www.w3.org/2000/svg','line');
       l.setAttribute('x1',STAGES[i].x);l.setAttribute('y1',CY);
       l.setAttribute('x2',STAGES[i+1].x);l.setAttribute('y2',CY);
-      l.setAttribute('stroke','rgba(50,70,140,0.2)');l.setAttribute('stroke-width','1');
+      l.setAttribute('stroke',`url(#sg${i})`);l.setAttribute('stroke-width','2');
       svg.appendChild(l);
     }
 
-    // CYTOKINE·Gate dotted line — now at index 3
+    // CYTOKINE·Gate barrier lines
     const gx=STAGES[3].x;
-    const dline=document.createElementNS('http://www.w3.org/2000/svg','line');
-    dline.setAttribute('x1',gx);dline.setAttribute('y1',H*0.08);
-    dline.setAttribute('x2',gx);dline.setAttribute('y2',CY-18);
-    dline.setAttribute('stroke','rgba(255,200,40,0.30)');
-    dline.setAttribute('stroke-width','1');
-    dline.setAttribute('stroke-dasharray','3,5');
-    svg.appendChild(dline);
-    const dline2=document.createElementNS('http://www.w3.org/2000/svg','line');
-    dline2.setAttribute('x1',gx);dline2.setAttribute('y1',CY+18);
-    dline2.setAttribute('x2',gx);dline2.setAttribute('y2',H*0.92);
-    dline2.setAttribute('stroke','rgba(255,200,40,0.30)');
-    dline2.setAttribute('stroke-width','1');
-    dline2.setAttribute('stroke-dasharray','3,5');
-    svg.appendChild(dline2);
+    [{y1:H*0.06,y2:CY-22},{y1:CY+22,y2:H*0.94}].forEach(pos=>{
+      const dl=document.createElementNS('http://www.w3.org/2000/svg','line');
+      dl.setAttribute('x1',gx);dl.setAttribute('y1',pos.y1);
+      dl.setAttribute('x2',gx);dl.setAttribute('y2',pos.y2);
+      dl.setAttribute('stroke','rgba(255,200,40,0.25)');
+      dl.setAttribute('stroke-width','1');dl.setAttribute('stroke-dasharray','3,5');
+      svg.appendChild(dl);
+    });
 
     STAGES.forEach((s,i)=>{
+      // Outer pulse ring (animated via CSS)
+      const pulse=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      pulse.setAttribute('cx',s.x);pulse.setAttribute('cy',CY);pulse.setAttribute('r',18);
+      pulse.setAttribute('fill','none');pulse.setAttribute('stroke',s.col);
+      pulse.setAttribute('stroke-width','0.5');pulse.setAttribute('opacity','0.2');
+      pulse.innerHTML=`<animate attributeName="r" values="16;22;16" dur="${3+i*0.4}s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.25;0.08;0.25" dur="${3+i*0.4}s" repeatCount="indefinite"/>`;
+      svg.appendChild(pulse);
+      // Inner ring
       const ring=document.createElementNS('http://www.w3.org/2000/svg','circle');
-      ring.setAttribute('cx',s.x);ring.setAttribute('cy',CY);ring.setAttribute('r',16);
-      ring.setAttribute('fill','none');ring.setAttribute('stroke',s.col);ring.setAttribute('stroke-width','1');ring.setAttribute('opacity','0.4');svg.appendChild(ring);
+      ring.setAttribute('cx',s.x);ring.setAttribute('cy',CY);ring.setAttribute('r',14);
+      ring.setAttribute('fill','none');ring.setAttribute('stroke',s.col);ring.setAttribute('stroke-width','1.2');ring.setAttribute('opacity','0.35');svg.appendChild(ring);
+      // Core dot with glow
+      const glow=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      glow.setAttribute('cx',s.x);glow.setAttribute('cy',CY);glow.setAttribute('r',8);
+      glow.setAttribute('fill',s.col);glow.setAttribute('opacity','0.08');svg.appendChild(glow);
       const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
-      dot.setAttribute('cx',s.x);dot.setAttribute('cy',CY);dot.setAttribute('r',5);dot.setAttribute('fill',s.col);dot.setAttribute('opacity','0.85');svg.appendChild(dot);
+      dot.setAttribute('cx',s.x);dot.setAttribute('cy',CY);dot.setAttribute('r',4);
+      dot.setAttribute('fill',s.col);dot.setAttribute('opacity','0.9');svg.appendChild(dot);
       // Stage name
       const t=document.createElementNS('http://www.w3.org/2000/svg','text');
-      t.setAttribute('x',s.x);t.setAttribute('y',CY+32);t.setAttribute('text-anchor','middle');
-      t.setAttribute('font-family','JetBrains Mono,monospace');t.setAttribute('font-size','11');
-      t.setAttribute('fill',s.col);t.setAttribute('opacity','0.7');t.textContent=s.name;svg.appendChild(t);
+      t.setAttribute('x',s.x);t.setAttribute('y',CY+34);t.setAttribute('text-anchor','middle');
+      t.setAttribute('font-family','JetBrains Mono,monospace');t.setAttribute('font-size','10');
+      t.setAttribute('fill',s.col);t.setAttribute('opacity','0.75');t.textContent=s.name;svg.appendChild(t);
       // Sub-label
       const sub=document.createElementNS('http://www.w3.org/2000/svg','text');
-      sub.setAttribute('x',s.x);sub.setAttribute('y',CY+46);sub.setAttribute('text-anchor','middle');
-      sub.setAttribute('font-family','Outfit,sans-serif');sub.setAttribute('font-size','10.5');
-      sub.setAttribute('fill',s.col);sub.setAttribute('opacity','0.45');sub.textContent=sublabels[i];svg.appendChild(sub);
+      sub.setAttribute('x',s.x);sub.setAttribute('y',CY+47);sub.setAttribute('text-anchor','middle');
+      sub.setAttribute('font-family','Outfit,sans-serif');sub.setAttribute('font-size','10');
+      sub.setAttribute('fill',s.col);sub.setAttribute('opacity','0.4');sub.textContent=sublabels[i];svg.appendChild(sub);
     });
   }
   drawStatic();
@@ -3193,7 +3213,7 @@ function initParticles(){
   // ── Canvas particle layer ──
   const cvs=document.createElement('canvas');
   const dpr=window.devicePixelRatio||1;
-  W=getW(); // re-measure after SVG appended
+  W=getW();
   STAGES=makeStages(W);
   cvs.width=W*dpr; cvs.height=H*dpr;
   cvs.style.cssText=`position:absolute;top:0;left:0;width:${W}px;height:${H}px;pointer-events:none`;
@@ -3201,125 +3221,165 @@ function initParticles(){
   const ctx=cvs.getContext('2d');
   ctx.scale(dpr,dpr);
 
-  // Resize observer — full reinit when width changes (e.g. dragging to bigger monitor)
+  // Resize observer
   if(window.ResizeObserver){
     let _resizeTimer=null;
     new ResizeObserver(()=>{
       const nw=getW();
       if(Math.abs(nw-W)<4)return;
-      // Debounce slightly to avoid thrashing during drag
       clearTimeout(_resizeTimer);
       _resizeTimer=setTimeout(()=>{
         W=nw; STAGES=makeStages(W);
-        // Resize canvas
         cvs.width=W*dpr; cvs.height=H*dpr;
         cvs.style.width=W+'px'; cvs.style.height=H+'px';
         ctx.setTransform(1,0,0,1,0,0); ctx.scale(dpr,dpr);
-        // Redraw static SVG layer
         drawStatic();
-        // Clear and respawn particles for new width
         particles.length=0;
-        const targetCount=Math.round(60*(W/900));
-        for(let i=0;i<targetCount;i++){
-          spawn();
-          const p=particles[particles.length-1];
-          const frac=Math.random();
-          p.x=p.x+(p.tx-p.x)*frac;
-          p.life=frac*60;
-          p.opacity=Math.min(p.life/8,0.9);
-        }
+        const cap=Math.round(80*(W/900));
+        for(let i=0;i<cap;i++){spawn();const p=particles[particles.length-1];const f=Math.random();p.x=STAGES[0].x+f*(STAGES[4].x-STAGES[0].x);p.progress=f;p.life=f*80;p.opacity=Math.min(p.life/12,0.85);}
       },150);
     }).observe(host);
   }
 
-  // ── Particle pool ──
+  // ── Particle pool — full-flow particles ──
   const particles=[];
-  function hexToRgb(hex){
-    const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
-    return `${r},${g},${b}`;
+  const stageColors=[
+    [96,220,255],   // ANTIGEN — light blue
+    [0,255,180],    // ANTIBODY — cyan/green
+    [96,144,255],   // AFFINITY — blue
+    [255,200,40],   // CYTOKINE — amber
+    [255,50,80],    // CASCADE — red (Bear) or [0,255,180] (Bull)
+  ];
+
+  function lerpColor(c1,c2,t){return c1.map((v,i)=>Math.round(v+(c2[i]-v)*t));}
+
+  function getColorAtProgress(prog,passed){
+    if(!passed){return [60,70,100];} // deflected — dim
+    if(prog<0.25) return lerpColor(stageColors[0],stageColors[1],prog/0.25);
+    if(prog<0.50) return lerpColor(stageColors[1],stageColors[2],(prog-0.25)/0.25);
+    if(prog<0.75) return lerpColor(stageColors[2],stageColors[3],(prog-0.50)/0.25);
+    const regime=(window.D&&window.D.r&&window.D.r.regime)||'Neutral';
+    const endCol=(regime==='Bear')?[255,50,80]:[0,255,180];
+    return lerpColor(stageColors[3],endCol,(prog-0.75)/0.25);
   }
 
   function spawn(){
-    const regime=(window.D&&window.D.r&&window.D.r.regime)||'Bear';
-    const isBear=regime==='Bear', isNeutral=regime==='Neutral';
-    // Weighted segment selection — more particles early, fewer at CASCADE
-    const r=Math.random();
-    const cum=[0.40,0.68,0.86,1.0];
-    const seg=cum.findIndex(c=>r<c);
-    const x1=STAGES[seg].x, x2=STAGES[seg+1].x;
-    const col=STAGES[seg].col;
-    const lane=(Math.random()-0.5)*H*0.22;
-    const speed=(x2-x1)/(180+Math.random()*120);
-    // In Bear, particles reaching CASCADE fade out; in Bull they glow
-    const cascadeGlow=!isBear;
+    const regime=(window.D&&window.D.r&&window.D.r.regime)||'Neutral';
+    const gate=(window.D&&window.D.r&&window.D.r.position_gate!=null)?window.D.r.position_gate:0.5;
+    const x0=STAGES[0].x;
+    const x4=STAGES[4].x;
+    const totalDist=x4-x0;
+    const lane=(Math.random()-0.5)*H*0.28;
+    const speed=totalDist/(400+Math.random()*300); // full journey speed
+    // Does this particle pass the gate?
+    const passesGate=(regime!=='Bear')&&(Math.random()<gate);
     particles.push({
-      x:x1, y:CY+lane,
-      tx:x2, ty:CY+lane,
-      col, rgb:hexToRgb(col),
-      speed, seg,
-      cascadeGlow,
-      isBear, isNeutral,
-      dy:0, fadeOut:false,
-      opacity:0, life:0,
-      size:1.4+Math.random()*1.4,
+      x:x0-Math.random()*30,
+      y:CY+lane,
+      baseY:CY+lane,
+      speed,
+      progress:0,
+      passesGate,
+      deflected:false,
+      deflectY:0,
+      opacity:0,
+      life:0,
+      size:1.0+Math.random()*1.8,
       wave:Math.random()*Math.PI*2,
-      waveAmp:(Math.random()-0.5)*8,
+      waveAmp:2+Math.random()*6,
+      waveFreq:1.5+Math.random()*2,
+      tail:[], // trail positions
     });
   }
 
-  // Pre-spawn staggered — scale count with container width
-  const initCount=Math.round(60*(W/900));
+  // Pre-spawn distributed
+  const initCount=Math.round(80*(W/900));
   for(let i=0;i<initCount;i++){
     spawn();
     const p=particles[particles.length-1];
-    // distribute along segment
-    const frac=Math.random();
-    p.x=p.x+(p.tx-p.x)*frac;
-    p.life=frac*60;
-    p.opacity=Math.min(p.life/8,0.9);
+    const f=Math.random();
+    const x0=STAGES[0].x,x4=STAGES[4].x;
+    p.x=x0+f*(x4-x0);
+    p.progress=f;
+    p.life=f*80;
+    p.opacity=Math.min(p.life/12,0.85);
+    if(!p.passesGate&&p.progress>0.72){p.deflected=true;p.deflectY=(Math.random()>0.5?1:-1)*(30+Math.random()*30);}
   }
 
   function frame(){
     ctx.clearRect(0,0,W,H);
     const now=performance.now()/1000;
+    const x0=STAGES[0].x,x4=STAGES[4].x,totalDist=x4-x0;
+    const gateX=STAGES[3].x;
 
     for(let i=particles.length-1;i>=0;i--){
       const p=particles[i];
       p.life++;
 
       // Fade in
-      if(p.life<10) p.opacity=Math.min(p.life/10,0.9);
+      if(p.life<15) p.opacity=Math.min(p.life/15,0.85);
 
-      // Move toward target
-      const dx=p.tx-p.x;
-      if(Math.abs(dx)<1){
+      // Move
+      p.x+=p.speed;
+      p.progress=(p.x-x0)/totalDist;
+
+      // Wave motion
+      const wave=Math.sin(now*p.waveFreq+p.wave)*p.waveAmp;
+
+      // Gate interaction
+      if(!p.deflected&&!p.passesGate&&p.x>=gateX-5){
+        p.deflected=true;
+        p.deflectY=(p.y>CY?1:-1)*(25+Math.random()*35);
+      }
+      if(p.deflected){
+        p.y+=(p.baseY+p.deflectY-p.y)*0.04;
+        p.opacity*=0.985; // fade out after deflection
+      } else {
+        p.y=p.baseY+wave*0.4;
+      }
+
+      // Remove if offscreen or faded
+      if(p.x>x4+40||p.opacity<0.02){
         particles.splice(i,1);spawn();continue;
       }
-      p.x+=p.speed*(dx>0?1:-1);
-      p.y=p.ty+Math.sin(now*2+p.wave)*p.waveAmp*0.3;
 
-      // At CASCADE segment (seg 3): dim in Bear, glow in Bull
-      const atCascade=p.seg===3;
-      const baseOpacity=atCascade&&p.isBear ? p.opacity*0.25
-                      : atCascade&&p.isNeutral ? p.opacity*0.55
-                      : p.opacity;
-      const baseSize=atCascade&&p.cascadeGlow ? p.size*1.8 : p.size;
+      // Store trail (last 6 positions)
+      p.tail.push({x:p.x,y:p.y});
+      if(p.tail.length>6)p.tail.shift();
+
+      // Color based on progress + gate pass
+      const rgb=getColorAtProgress(Math.max(0,Math.min(1,p.progress)),!p.deflected);
+      const brighten=(!p.deflected&&p.progress>0.75)?1.3:1; // glow after gate
+      const sz=p.size*(p.deflected?0.6:(p.progress>0.75?1.5:1));
+      const op=Math.min(p.opacity*brighten,0.95);
+
+      // Draw trail
+      if(p.tail.length>2&&!p.deflected){
+        for(let t=0;t<p.tail.length-1;t++){
+          const tp=p.tail[t];
+          const tOp=op*(t/p.tail.length)*0.3;
+          ctx.beginPath();
+          ctx.arc(tp.x,tp.y,sz*0.5,0,Math.PI*2);
+          ctx.fillStyle=`rgba(${rgb[0]},${rgb[1]},${rgb[2]},${tOp})`;
+          ctx.fill();
+        }
+      }
 
       // Draw glow
       ctx.beginPath();
-      ctx.arc(p.x,p.y,baseSize*2.5,0,Math.PI*2);
-      ctx.fillStyle=`rgba(${p.rgb},${baseOpacity*0.15})`;
+      ctx.arc(p.x,p.y,sz*3,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${rgb[0]},${rgb[1]},${rgb[2]},${op*0.1})`;
       ctx.fill();
       // Draw dot
       ctx.beginPath();
-      ctx.arc(p.x,p.y,baseSize,0,Math.PI*2);
-      ctx.fillStyle=`rgba(${p.rgb},${baseOpacity})`;
+      ctx.arc(p.x,p.y,sz,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${rgb[0]},${rgb[1]},${rgb[2]},${op})`;
       ctx.fill();
     }
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
-  setInterval(()=>{const cap=Math.round(70*(W/900));if(particles.length<cap)spawn();},100);
+  setInterval(()=>{const cap=Math.round(85*(W/900));if(particles.length<cap)spawn();},80);
 }
 
 if(document.readyState==='complete'){setTimeout(initParticles,50);}
