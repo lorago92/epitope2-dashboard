@@ -518,120 +518,93 @@ body::after{
         </div>
       </div>
 
-      <!-- Row 2: Current Regime (hero) + Signal Strength + Universe Intelligence -->
-      <div class="g-auto mb16" style="grid-template-columns:1.2fr 1fr 1fr">
+      <!-- Row 2: Decision Flow — 4 cards -->
+      <div class="g-auto mb16" style="grid-template-columns:1fr 1fr 1fr 1fr">
 
-        <!-- Current Regime — hero card -->
-        <div class="card regime-card">
-          <div class="card-top-bar" id="ov-top-bar" style="background:var(--amber);box-shadow:0 0 12px var(--amber)"></div>
-          <div class="card-title">Current Regime</div>
-          <div class="regime-val Neutral" id="ov-regime">NEUTRAL</div>
-          <div class="regime-gate">Position gate (4-level): <span class="amber" id="ov-gate">50%</span> <span style="font-size:10px;color:var(--t4)" id="ov-gate-level"></span></div>
-
-          <div class="gauge-wrap" style="margin-top:12px">
-            <div class="gauge-lbl">Composite Score</div>
-            <div class="gauge-zones"><span class="gz-bear">Bear</span><span class="gz-neutral">Neutral</span><span class="gz-bull">Bull</span></div>
-            <div class="gauge-track">
-              <div class="gauge-needle" id="ov-needle" style="left:50%">
-                <div class="gnv" id="ov-needle-val">0.00</div>
-                <div class="gnl"></div>
-              </div>
+        <!-- Card 1: Macro Regime -->
+        <div class="card" style="position:relative;overflow:hidden">
+          <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--amber);border-radius:8px 8px 0 0"></div>
+          <div style="font-size:9px;letter-spacing:1.5px;color:var(--t4);margin-bottom:10px">MACRO REGIME</div>
+          <div class="regime-val Neutral" id="ov-regime" style="font-size:28px;margin-bottom:4px">NEUTRAL</div>
+          <div style="font-size:11px;color:var(--t4);margin-bottom:14px">Macro panel → PCA → HMM → regime</div>
+          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t4);margin-bottom:2px"><span style="color:var(--red)">Bear</span><span style="color:var(--amber)">Neutral</span><span style="color:var(--cyan)">Bull</span></div>
+          <div class="gauge-track" style="margin-bottom:4px">
+            <div class="gauge-needle" id="ov-needle" style="left:50%">
+              <div class="gnv" id="ov-needle-val">0.00</div>
+              <div class="gnl"></div>
             </div>
           </div>
-
-          <!-- PC6 + Architecture row -->
-          <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-top:12px;border-top:1px solid var(--bd)">
-            <div>
-              <div style="font-size:9px;color:var(--t4);letter-spacing:1px;margin-bottom:4px">PC6 BIOTECH FACTOR</div>
-              <div style="font-size:20px;font-weight:600;color:var(--cyan)" id="ov-pc6-val">+0.448</div>
-            </div>
-            <div>
-              <div style="font-size:9px;color:var(--t4);letter-spacing:1px;margin-bottom:4px">PC6 GATE</div>
-              <div style="font-size:20px;font-weight:600;color:var(--cyan)" id="ov-pc6-gate">BULL</div>
-            </div>
-          </div>
-
-          <!-- PCA + HMM compact -->
-          <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-top:12px;border-top:1px solid var(--bd)">
-            <div>
-              <div style="font-size:9px;color:var(--t4);margin-bottom:4px">PCA</div>
-              <div style="display:flex;height:5px;border-radius:3px;overflow:hidden;background:rgba(50,70,140,0.15)">
-                <div id="ov-pca-pc1" style="height:100%;background:#60dcff;opacity:0.85;transition:width 0.8s ease"></div>
-                <div id="ov-pca-pc2" style="height:100%;background:#6090ff;opacity:0.7;transition:width 0.8s ease"></div>
-                <div id="ov-pca-pc3" style="height:100%;background:#4060cc;opacity:0.55;transition:width 0.8s ease"></div>
-              </div>
-              <div style="font-size:9px;color:var(--blue);margin-top:4px" id="ov-pca-line">—</div>
-            </div>
-            <div>
-              <div style="font-size:9px;color:var(--t4);margin-bottom:4px">HMM</div>
-              <div style="position:relative;height:5px;border-radius:3px;background:rgba(50,70,140,0.15)">
-                <div id="ov-hmm-bar" style="position:absolute;top:0;height:100%;width:25%;border-radius:3px;background:var(--blue);opacity:0.7;transition:left 0.8s ease"></div>
-              </div>
-              <div style="font-size:9px;color:var(--blue);margin-top:4px" id="ov-hmm-line">—</div>
-            </div>
-          </div>
-
-          <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--bd)">
-            <div style="font-size:10px;color:var(--t3)" id="ov-regime-since">—</div>
-          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;padding:6px 0;border-top:1px solid var(--bd)"><span style="color:var(--t4)">HMM state</span><span style="font-weight:600;color:var(--blue);font-family:'JetBrains Mono',monospace" id="ov-hmm-line">—</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;padding:6px 0;border-top:1px solid var(--bd)"><span style="color:var(--t4)">PCA variance</span><span style="font-weight:600;color:var(--blue);font-family:'JetBrains Mono',monospace" id="ov-pca-line">—</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;padding:6px 0;border-top:1px solid var(--bd)"><span style="color:var(--t4)">Since</span><span style="font-weight:600;color:var(--t3);font-family:'JetBrains Mono',monospace" id="ov-regime-since">—</span></div>
         </div>
 
-        <!-- Signal Strength -->
-        <div class="card">
-          <div class="card-title">Signal Strength</div>
-          <div style="font-size:9px;letter-spacing:1.5px;color:var(--cyan);margin-bottom:8px;margin-top:2px">TOP RANKED</div>
-          <div id="sig-top"></div>
-          <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--bd)">
-            <div style="font-size:9px;letter-spacing:1.5px;color:var(--t4);margin-bottom:8px">BOTTOM RANKED</div>
-            <div id="sig-bot"></div>
+        <!-- Card 2: Biotech Factor -->
+        <div class="card" style="position:relative;overflow:hidden">
+          <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--cyan);border-radius:8px 8px 0 0"></div>
+          <div style="font-size:9px;letter-spacing:1.5px;color:var(--t4);margin-bottom:10px">BIOTECH FACTOR</div>
+          <div style="font-size:28px;font-weight:700;color:var(--cyan);line-height:1.1;margin-bottom:4px" id="ov-pc6-val">+0.448</div>
+          <div style="font-size:11px;color:var(--t4);margin-bottom:14px">Macro panel → PCA → 6th component → signal</div>
+          <div style="margin:12px 0">
+            <div id="ov-pc6-pill" style="display:inline-block;padding:3px 10px;border-radius:6px;font-size:10px;font-weight:600;font-family:'JetBrains Mono',monospace;border:1px solid rgba(0,255,180,0.3);color:var(--cyan);background:rgba(0,255,180,0.08)">PC6 &gt; 0 → BULLISH BIOTECH</div>
           </div>
-          <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--bd);font-size:9px;color:var(--t4)">
-            AFFINITY·Score · <span style="color:var(--t3)">418 securities ranked</span>
-          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;padding:6px 0;border-top:1px solid var(--bd)"><span style="color:var(--t4)">Effect on gate</span><span style="font-weight:600;color:var(--amber);font-family:'JetBrains Mono',monospace">Confirms or halves</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;padding:6px 0;border-top:1px solid var(--bd)"><span style="color:var(--t4)">Threshold</span><span style="font-weight:600;color:var(--t3);font-family:'JetBrains Mono',monospace">&gt; 0 = bullish</span></div>
         </div>
 
-        <!-- Universe Intelligence -->
-        <div class="card">
-          <div class="card-title">Universe Intelligence</div>
-          <div class="ui-row">
-            <div style="display:flex;align-items:center;gap:8px">
-              <div class="ui-dot" style="color:var(--cyan);background:var(--cyan)"></div>
-              <span style="font-size:12px;color:var(--cyan)">BUY</span>
-            </div>
-            <div style="font-size:20px;color:var(--cyan)" id="uni-buy">—</div>
-            <div style="font-size:10px;color:var(--t3);padding-left:14px" id="uni-buy-sub">—</div>
-          </div>
-          <div class="ui-row">
-            <div style="display:flex;align-items:center;gap:8px">
-              <div class="ui-dot" style="color:var(--amber);background:var(--amber)"></div>
-              <span style="font-size:12px;color:var(--amber)">WATCH</span>
-            </div>
-            <div style="font-size:20px;color:var(--amber)" id="uni-watch">—</div>
-            <div style="font-size:10px;color:var(--t3);padding-left:14px">Monitored · pending</div>
-          </div>
-          <div class="ui-row">
-            <div style="display:flex;align-items:center;gap:8px">
-              <div class="ui-dot" style="color:var(--red);background:var(--red)"></div>
-              <span style="font-size:12px;color:var(--red)">AVOID</span>
-            </div>
-            <div style="font-size:20px;color:var(--red)" id="uni-avoid">—</div>
-            <div style="font-size:10px;color:var(--t3);padding-left:14px">No exposure</div>
-          </div>
-          <div style="margin-top:10px">
-            <div style="display:flex;height:5px;border-radius:3px;overflow:hidden" id="uni-bar">
-              <div style="background:var(--cyan);opacity:0.7" id="uni-bar-buy"></div>
-              <div style="background:var(--amber);opacity:0.5" id="uni-bar-watch"></div>
-              <div style="background:var(--red);opacity:0.5" id="uni-bar-avoid"></div>
+        <!-- Card 3: Gate Decision -->
+        <div class="card" style="position:relative;overflow:hidden">
+          <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--amber),var(--cyan));border-radius:8px 8px 0 0"></div>
+          <div style="font-size:9px;letter-spacing:1.5px;color:var(--t4);margin-bottom:10px">GATE DECISION</div>
+          <div style="font-size:28px;font-weight:700;color:var(--amber);line-height:1.1;margin-bottom:4px" id="ov-gate">50%</div>
+          <div style="font-size:11px;color:var(--t4);margin-bottom:14px" id="ov-gate-sub">Neutral × PC6 bullish → half deployed</div>
+          <div style="margin:10px 0">
+            <div style="display:grid;grid-template-columns:auto auto auto;gap:0;font-size:9px;font-family:'JetBrains Mono',monospace;text-align:center;border:1px solid var(--bd);border-radius:6px;overflow:hidden" id="ov-gate-table">
+              <div style="padding:5px 8px;background:rgba(50,70,140,0.08);color:var(--t4)"></div>
+              <div style="padding:5px 8px;background:rgba(50,70,140,0.08);color:var(--cyan);font-weight:600">PC6&gt;0</div>
+              <div style="padding:5px 8px;background:rgba(50,70,140,0.08);color:var(--red)">PC6≤0</div>
+              <div style="padding:5px 6px;color:var(--cyan)">Bull</div>
+              <div style="padding:5px 6px;color:var(--cyan)" id="ov-gt-bull-pos">100%</div>
+              <div style="padding:5px 6px;color:var(--amber)" id="ov-gt-bull-neg">50%</div>
+              <div style="padding:5px 6px;color:var(--amber)" id="ov-gt-neut-label">Neutral</div>
+              <div style="padding:5px 6px;color:var(--amber)" id="ov-gt-neut-pos">50%</div>
+              <div style="padding:5px 6px;color:var(--t4)" id="ov-gt-neut-neg">25%</div>
+              <div style="padding:5px 6px;color:var(--red)">Bear</div>
+              <div style="padding:5px 6px;color:var(--t4)">0%</div>
+              <div style="padding:5px 6px;color:var(--t4)">0%</div>
             </div>
           </div>
-          <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--bd)">
-            <div class="uni-stats">
-              <div class="uni-kv"><span class="uni-k">Sector</span><span class="uni-v">Biotech / Biopharma</span></div>
-              <div class="uni-kv"><span class="uni-k">Min market cap</span><span class="uni-v">$100M</span></div>
-              <div class="uni-kv"><span class="uni-k">Min daily volume</span><span class="uni-v">$1M ADDV</span></div>
-              <div class="uni-kv"><span class="uni-k">Total securities</span><span class="uni-v">418</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;padding:6px 0;border-top:1px solid var(--bd)"><span style="color:var(--t4)">Capital deployed</span><span style="font-weight:600;color:var(--amber);font-family:'JetBrains Mono',monospace" id="ov-deployed">—</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;padding:6px 0;border-top:1px solid var(--bd)"><span style="color:var(--t4)">Cash</span><span style="font-weight:600;color:var(--t3);font-family:'JetBrains Mono',monospace" id="ov-cash">—</span></div>
+        </div>
+
+        <!-- Card 4: Signal & Portfolio -->
+        <div class="card" style="position:relative;overflow:hidden">
+          <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#b06aff;border-radius:8px 8px 0 0"></div>
+          <div style="font-size:9px;letter-spacing:1.5px;color:var(--t4);margin-bottom:10px">SIGNAL & PORTFOLIO</div>
+          <div style="font-size:28px;font-weight:700;color:#b06aff;line-height:1.1;margin-bottom:4px" id="ov-npos">20</div>
+          <div style="font-size:11px;color:var(--t4);margin-bottom:14px">Positions · score-weighted · bi-weekly</div>
+          <div style="display:flex;gap:8px;margin:8px 0 12px">
+            <div style="flex:1;text-align:center;padding:6px;border-radius:6px;background:rgba(0,255,180,0.06);border:1px solid rgba(0,255,180,0.15)">
+              <div style="font-size:9px;color:rgba(0,255,180,0.5)">BUY</div>
+              <div style="font-size:18px;font-weight:700;color:var(--cyan);font-family:'JetBrains Mono',monospace" id="uni-buy">—</div>
+            </div>
+            <div style="flex:1;text-align:center;padding:6px;border-radius:6px;background:rgba(255,200,40,0.04);border:1px solid rgba(255,200,40,0.12)">
+              <div style="font-size:9px;color:rgba(255,200,40,0.5)">WATCH</div>
+              <div style="font-size:18px;font-weight:700;color:var(--amber);font-family:'JetBrains Mono',monospace" id="uni-watch">—</div>
+            </div>
+            <div style="flex:1;text-align:center;padding:6px;border-radius:6px;background:rgba(255,50,80,0.04);border:1px solid rgba(255,50,80,0.10)">
+              <div style="font-size:9px;color:rgba(255,50,80,0.4)">AVOID</div>
+              <div style="font-size:18px;font-weight:700;color:var(--red);font-family:'JetBrains Mono',monospace" id="uni-avoid">—</div>
             </div>
           </div>
+          <div style="display:flex;height:4px;border-radius:2px;overflow:hidden;margin-bottom:12px" id="uni-bar">
+            <div style="background:var(--cyan);opacity:0.7" id="uni-bar-buy"></div>
+            <div style="background:var(--amber);opacity:0.5" id="uni-bar-watch"></div>
+            <div style="background:var(--red);opacity:0.3" id="uni-bar-avoid"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;padding:6px 0;border-top:1px solid var(--bd)"><span style="color:var(--t4)">Top signal</span><span style="font-weight:600;color:var(--cyan);font-family:'JetBrains Mono',monospace" id="ov-top-sig">—</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;padding:6px 0;border-top:1px solid var(--bd)"><span style="color:var(--t4)">Worst signal</span><span style="font-weight:600;color:var(--red);font-family:'JetBrains Mono',monospace" id="ov-worst-sig">—</span></div>
         </div>
       </div>
 
@@ -1665,7 +1638,7 @@ function hmmToNeedle(state){return [12.5,37.5,62.5,87.5][Math.min(state,3)]}
 
 /* ─ OVERVIEW ──────────────────────────────────────────────────────── */
 function renderOverview(m,r,p){
-  const regime=m.regime||'Bear';
+  const regime=m.regime||'Neutral';
   const col=regimeColor(regime);
 
   // Nav
@@ -1673,63 +1646,78 @@ function renderOverview(m,r,p){
   if(nd){nd.className='sdot '+(regime==='Bear'?'red':(regime==='Bull'||regime==='Mild Bull'||regime==='Strong Bull')?'cyan':'amber')}
   txt('nav-regime-label',regime.toUpperCase()+' · PAPER TRADING NOW');
 
-  // Regime card
+  // Card 1: Macro Regime
   const rv=$('ov-regime');
   if(rv){rv.textContent=regime.toUpperCase();rv.className='regime-val '+regime}
-  const tb=$('ov-top-bar');
-  if(tb){tb.style.background=col;tb.style.boxShadow=`0 0 12px ${col}`}
-  const gt=$('ov-gate');
-  if(gt){const gv=r.position_gate!=null?r.position_gate:(regime==='Bear'?0:regime==='Neutral'?0.5:1);gt.textContent=Math.round(gv*100)+'%';gt.className=regimeClass(regime)}
-  txt('ov-regime-score',`Score: ${(r.composite_score||0).toFixed(4)}`);
-  const pca=r.pca_explained_variance||[0.4821,0.1871,0.0988];
-  const totalVar=(pca.reduce((a,b)=>a+b,0)*100).toFixed(1);
-  const p1=((pca[0]||0)*100).toFixed(1), p2=((pca[1]||0)*100).toFixed(1), p3=((pca[2]||0)*100).toFixed(1);
-  const b1=$('ov-pca-pc1'),b2=$('ov-pca-pc2'),b3=$('ov-pca-pc3');
-  if(b1)b1.style.width=p1+'%'; if(b2)b2.style.width=p2+'%'; if(b3)b3.style.width=p3+'%';
-  txt('ov-pca-line',`${pca.length} components · ${totalVar}% explained`);
-  const hmmState=r.hmm_state??1;
-  const hmmConverged=r.hmm_converged===false?'Not converged':'Converged ✓';
-  txt('ov-hmm-line',`State ${hmmState} of 4 · ${hmmConverged}`);
-  const hmmBar=$('ov-hmm-bar');
-  if(hmmBar)hmmBar.style.left=(hmmState/4*100)+'%';
-  const regimeSince=r.date||p.last_rebalance||'—';
-  const rsEl=$('ov-regime-since');
-  if(rsEl)rsEl.textContent=`In ${regime} regime since: ${regimeSince}`;
-
-  // PC6 Biotech Factor (overview card)
-  const pc6v=r.pc6_value||0;
-  const pc6El=$('ov-pc6-val');
-  if(pc6El){pc6El.textContent=pc6v>=0?'+'+pc6v.toFixed(3):pc6v.toFixed(3);pc6El.style.color=pc6v>0?'var(--cyan)':'var(--red)';}
-  const pc6gEl=$('ov-pc6-gate');
-  if(pc6gEl){const pg=r.pc6_gate||0.5;pc6gEl.textContent=pg>=1?'BULL':'NEUTRAL';pc6gEl.style.color=pg>=1?'var(--cyan)':'var(--amber)';}
-
-  // Needle
   const needlePct=scoreToNeedle(r.composite_score||0);
   const nEl=$('ov-needle');if(nEl)nEl.style.left=needlePct+'%';
   txt('ov-needle-val',(r.composite_score||0).toFixed(3));
+  const pca=r.pca_explained_variance||[0.4821,0.1871,0.0988];
+  const totalVar=(pca.reduce((a,b)=>a+b,0)*100).toFixed(1);
+  txt('ov-pca-line',`${totalVar}% explained`);
+  const hmmState=r.hmm_state??1;
+  const hmmConverged=r.hmm_converged===false?'Not converged':'Converged ✓';
+  txt('ov-hmm-line',`State ${hmmState} of 4 · ${hmmConverged}`);
+  const regimeSince=r.date||p.last_rebalance||'—';
+  const rsEl=$('ov-regime-since');
+  if(rsEl)rsEl.textContent=regimeSince;
 
-  // Universe
+  // Card 2: Biotech Factor
+  const pc6v=r.pc6_value||0;
+  const pc6El=$('ov-pc6-val');
+  if(pc6El){pc6El.textContent=pc6v>=0?'+'+pc6v.toFixed(3):pc6v.toFixed(3);pc6El.style.color=pc6v>0?'var(--cyan)':'var(--red)';}
+  const pc6Pill=$('ov-pc6-pill');
+  if(pc6Pill){
+    if(pc6v>0){pc6Pill.textContent='PC6 > 0 → BULLISH BIOTECH';pc6Pill.style.color='var(--cyan)';pc6Pill.style.borderColor='rgba(0,255,180,0.3)';pc6Pill.style.background='rgba(0,255,180,0.08)';}
+    else{pc6Pill.textContent='PC6 ≤ 0 → NEUTRAL BIOTECH';pc6Pill.style.color='var(--amber)';pc6Pill.style.borderColor='rgba(255,200,40,0.3)';pc6Pill.style.background='rgba(255,200,40,0.08)';}
+  }
+
+  // Card 3: Gate Decision
+  const gv=r.position_gate!=null?r.position_gate:(regime==='Bear'?0:regime==='Neutral'?0.5:1);
+  const gt=$('ov-gate');
+  if(gt){gt.textContent=Math.round(gv*100)+'%';gt.style.color=gv>=1?'var(--cyan)':gv>0?'var(--amber)':'var(--red)';}
+  const gSub=$('ov-gate-sub');
+  if(gSub){
+    const pc6Label=pc6v>0?'PC6 bullish':'PC6 neutral';
+    const deployLabel=gv>=1?'fully deployed':gv>=0.5?'half deployed':gv>0?'quarter deployed':'zero exposure';
+    gSub.textContent=`${regime} × ${pc6Label} → ${deployLabel}`;
+  }
+  // Highlight active row in gate table
+  const _highlightGateRow=(rowPrefix,isActive)=>{
+    const el=$(`ov-gt-${rowPrefix}-label`);
+    // Active row gets highlighted background via the cell elements
+  };
+  // Capital deployed / cash
+  const _ovDeployed=m.long_market_value!=null?m.long_market_value:(p.capital_deployed_A||0);
+  const _ovCash=m.cash!=null?m.cash:((m.portfolio_value||100000)-_ovDeployed);
+  txt('ov-deployed',fmt$(_ovDeployed));
+  txt('ov-cash',fmt$(_ovCash));
+
+  // Card 4: Signal & Portfolio
   const n=418, buy=Math.max(0,m.long_positions||0);
   const bearMode=(regime==='Bear');
   const buyN=bearMode?0:buy, watchN=bearMode?0:Math.floor(n*0.43), avoidN=bearMode?n:n-buyN-watchN;
+  txt('ov-npos',(buyN||20).toString());
   txt('uni-buy',buyN.toString());
-  set('uni-buy-sub',bearMode?'Bear regime · no deployment':`Top ${buyN} deployed · ${Math.round((r.position_gate||1)*100)}% capital`);
-  txt('uni-watch',bearMode?'0':watchN.toString());
-  txt('uni-avoid',bearMode?'418':avoidN.toString());
+  txt('uni-watch',watchN.toString());
+  txt('uni-avoid',avoidN.toString());
   const buyPct=bearMode?0:(buyN/n*100),watchPct=bearMode?0:(watchN/n*100),avoidPct=100-buyPct-watchPct;
   const bb=$('uni-bar-buy'),bw=$('uni-bar-watch'),ba=$('uni-bar-avoid');
   if(bb)bb.style.width=buyPct.toFixed(1)+'%';
   if(bw)bw.style.width=watchPct.toFixed(1)+'%';
   if(ba)ba.style.width=avoidPct.toFixed(1)+'%';
+  // Top/worst signal from D.sig
+  const sig=window.D&&window.D.sig||[];
+  if(sig.length>0){
+    txt('ov-top-sig',`${sig[0].ticker} · ${sig[0].score.toFixed(1)}`);
+    txt('ov-worst-sig',`${sig[sig.length-1].ticker} · ${sig[sig.length-1].score.toFixed(1)}`);
+  }
 
   // Portfolio row — matches Portfolio page card
-  txt('pf-value',fmt$(100000));  // inception capital — fixed $100k notional
+  txt('pf-value',fmt$(100000));
   txt('pf-date',p.last_rebalance||'—');
-  // Rank table rebalance date label
   const _rrEl=$('pl-rank-rebal-date');
   if(_rrEl){const _rd=p.last_rebalance||'';if(_rd){const _rp=_rd.split('-');_rrEl.textContent=_rp.length===3?`${_rp[1]}/${_rp[2]}/${_rp[0]}`:_rd;}else{_rrEl.textContent='—';}}
-  const _ovDeployed=m.long_market_value!=null?m.long_market_value:(p.capital_deployed_A||0);
-  const _ovCash=m.cash!=null?m.cash:((m.portfolio_value||0)-_ovDeployed);
   txt('pf-deployed',fmt$(_ovDeployed));
   txt('pf-cash',fmt$(_ovCash));
   // Today P&L
