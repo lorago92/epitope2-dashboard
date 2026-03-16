@@ -1561,10 +1561,15 @@ async function loadData(){
       const _lines=text.trim().split('\n');
       const _hdrs=_lines[0].replace(/^\ufeff/,'').split(',').map(h=>h.trim().toLowerCase().replace(/['"]/g,''));
       const _ci=n=>_hdrs.findIndex(h=>h===n||h.includes(n));
-      const _iT=_ci('ticker'),_iFS=_ci('final_score'),_iA=_ci('trade_action'),_iRS=_ci('raw_score'),_iOS=_ci('options_score'),_iPhi=_ci('phi_score'),_iPsi=_ci('psi_score'),_iG=_ci('regime_gate'),_iReg=_ci('regime');
-      // Fallback for v1 obfuscated format: id,s1,s2,s3,s4,s5,s6,s7,s8
-      const _v1=(_iT<0&&(_hdrs[0]==='id'||_hdrs[0].endsWith('id')));
-      const rows=_lines.slice(1).map(l=>{const c=l.split(',');if(_v1)return{ticker:c[0],score:parseFloat(c[3]||0),final_score:parseFloat(c[1]||0),action:c[2]||'—',phi:parseFloat(c[4]||0),psi:parseFloat(c[5]||0),regime:c[7]||'—',gate:parseFloat(c[8]||0)};return{ticker:c[_iT>=0?_iT:0],score:parseFloat(c[_iRS>=0?_iRS:3]||0),final_score:parseFloat(c[_iFS>=0?_iFS:1]||0),action:c[_iA>=0?_iA:2]||'—',phi:parseFloat(c[_iPhi>=0?_iPhi:9]||0),psi:parseFloat(c[_iPsi>=0?_iPsi:10]||0),regime:c[_iReg>=0?_iReg:15]||'—',gate:parseFloat(c[_iG>=0?_iG:16]||0)};}).filter(r=>r.ticker&&r.ticker.length>0&&!isNaN(r.score));
+      // Support 3 formats: (1) new clean: id,score,action,date,regime,gate  (2) v1 obfuscated: id,s1,s2,...,s8  (3) raw pipeline columns
+      const _iT=_ci('ticker'),_iRS=_ci('raw_score'),_iA=_ci('trade_action'),_iG=_ci('regime_gate'),_iReg=_ci('regime');
+      const _isClean=(_hdrs.includes('score')&&_hdrs.includes('action')&&_hdrs.includes('gate'));
+      const _isV1=(!_isClean&&_iT<0&&(_hdrs[0]==='id'||_hdrs[0].endsWith('id'))&&_hdrs.includes('s3'));
+      const rows=_lines.slice(1).map(l=>{const c=l.split(',');
+        if(_isClean){const ci=n=>_hdrs.indexOf(n);return{ticker:c[ci('id')]||c[0],score:parseFloat(c[ci('score')]||0),action:c[ci('action')]||'—',regime:c[ci('regime')]||'—',gate:parseFloat(c[ci('gate')]||0)};}
+        if(_isV1)return{ticker:c[0],score:parseFloat(c[3]||0),action:c[2]||'—',regime:c[7]||'—',gate:parseFloat(c[8]||0)};
+        return{ticker:c[_iT>=0?_iT:0],score:parseFloat(c[_iRS>=0?_iRS:3]||0),action:c[_iA>=0?_iA:2]||'—',regime:c[_iReg>=0?_iReg:15]||'—',gate:parseFloat(c[_iG>=0?_iG:16]||0)};
+      }).filter(r=>r.ticker&&r.ticker.length>0&&!isNaN(r.score));
       rows.sort((a,b)=>b.score-a.score);
       D.sig=rows;
     }
