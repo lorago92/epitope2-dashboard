@@ -1009,7 +1009,7 @@ body::after{
               </div>
               <div style="margin-bottom:16px">
                 <div style="font-size:9px;letter-spacing:1.5px;color:var(--t4);margin-bottom:6px">SIGNALS</div>
-                <div style="font-size:13px;font-weight:600;color:var(--t1)">Φ · Ψ → Composite (AFFINITY Score)</div>
+                <div style="font-size:13px;font-weight:600;color:var(--t1)">Φ · Ψ → AFFINITY Score</div>
               </div>
               <div style="padding-top:14px;border-top:1px solid var(--bd);display:flex;justify-content:space-between;font-size:11px">
                 <div style="display:flex;flex-direction:column;gap:6px">
@@ -1130,9 +1130,9 @@ body::after{
           </div>
         </div>
 
-        <!-- Step 3: Composite score history chart -->
+        <!-- Step 3: Regime score history chart -->
         <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--bd)">
-          <div style="font-size:9px;letter-spacing:1.5px;color:var(--t4);margin-bottom:4px">STEP 3 · COMPOSITE SCORE HISTORY</div>
+          <div style="font-size:9px;letter-spacing:1.5px;color:var(--t4);margin-bottom:4px">STEP 3 · REGIME SCORE HISTORY</div>
           <div style="font-size:9px;color:rgba(255,255,255,0.2);margin-bottom:10px">Weighted combination of smoothed PCA factors → regime classification over time</div>
           <div id="pl-regime-chart" style="height:160px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px">
             <div style="font-size:11px;color:var(--t4)">Awaiting regime history</div>
@@ -2324,7 +2324,7 @@ async function renderSignals(r){
       paper_bgcolor:'transparent',
       plot_bgcolor:'transparent',
       xaxis:{title:{text:'Rank',font:{size:9,color:'rgba(255,255,255,0.4)'}},gridcolor:'rgba(50,80,160,0.1)',tickfont:{size:7,color:'rgba(255,255,255,0.25)'},showline:false,zeroline:false},
-      yaxis:{title:{text:'Composite Score',font:{size:9,color:'rgba(255,255,255,0.4)'}},gridcolor:'rgba(50,80,160,0.15)',tickfont:{size:7,color:'rgba(255,255,255,0.25)'},showline:false,zeroline:true,zerolinecolor:'rgba(50,80,160,0.25)',range:[0,100]},
+      yaxis:{title:{text:'Regime Score',font:{size:9,color:'rgba(255,255,255,0.4)'}},gridcolor:'rgba(50,80,160,0.15)',tickfont:{size:7,color:'rgba(255,255,255,0.25)'},showline:false,zeroline:true,zerolinecolor:'rgba(50,80,160,0.25)',range:[0,100]},
       margin:{l:40,r:10,t:10,b:35},
       font:{family:'JetBrains Mono',size:8,color:'rgba(255,255,255,0.35)'},
       showlegend:false,
