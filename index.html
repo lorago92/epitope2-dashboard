@@ -614,12 +614,20 @@ body::after{
                   <div class="sub" id="pf-date">—</div>
                 </div>
                 <div>
-                  <div class="lbl">Market Value</div>
-                  <div class="val cyan" id="pf-deployed">—</div>
+                  <div class="lbl">Total Equity</div>
+                  <div class="val cyan" id="pf-equity">—</div>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-top:12px;border-top:1px solid var(--bd);margin-bottom:14px">
+                <div>
+                  <div class="lbl">Deployed</div>
+                  <div class="val sm" id="pf-deployed" style="color:var(--t2)">—</div>
+                  <div class="sub" id="pf-deployed-pct">—</div>
                 </div>
                 <div>
                   <div class="lbl">Cash</div>
-                  <div class="val" id="pf-cash">—</div>
+                  <div class="val sm" id="pf-cash" style="color:var(--t2)">—</div>
+                  <div class="sub" id="pf-cash-pct">—</div>
                 </div>
               </div>
               <div style="padding-top:12px;border-top:1px solid var(--bd)">
@@ -743,23 +751,30 @@ body::after{
         <!-- Capital -->
         <div class="card">
           <div class="card-title">Capital</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px">
-            <div>
-              <div class="lbl">INCEPTION</div>
-              <div class="val" id="pt-inception">$100,000</div>
-              <div class="sub" id="pt-date">—</div>
+          <div style="margin-top:6px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+              <div>
+                <div class="lbl">INCEPTION</div>
+                <div class="val" id="pt-inception">$100,000</div>
+                <div class="sub" id="pt-date">—</div>
+              </div>
+              <div>
+                <div class="lbl">TOTAL EQUITY</div>
+                <div class="val cyan" id="pt-equity">—</div>
+              </div>
             </div>
-            <div>
-              <div class="lbl">MARKET VALUE</div>
-              <div class="val cyan" id="pt-deployed">—</div>
-              <div class="sub" id="pt-deployed-pct">—</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-top:12px;border-top:1px solid var(--bd)">
+              <div>
+                <div class="lbl">DEPLOYED</div>
+                <div class="val sm" id="pt-deployed" style="color:var(--t2)">—</div>
+                <div class="sub" id="pt-deployed-pct">—</div>
+              </div>
+              <div>
+                <div class="lbl">CASH</div>
+                <div class="val sm" id="pt-cash" style="color:var(--t2)">—</div>
+                <div class="sub" id="pt-cash-pct">—</div>
+              </div>
             </div>
-            <div>
-              <div class="lbl">CASH</div>
-              <div class="val" id="pt-cash">—</div>
-              <div class="sub" id="pt-cash-pct">—</div>
-            </div>
-
           </div>
           <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--bd)">
             <div class="lbl" style="margin-bottom:6px">SINCE INCEPTION</div>
@@ -1243,7 +1258,7 @@ body::after{
               <span style="color:var(--t4)">POSITION SIZING</span><span>Equal weight (~5% per position)</span>
             </div>
             <div style="display:flex;justify-content:space-between;font-size:10px;padding-bottom:8px;border-bottom:1px solid var(--bd)">
-              <span style="color:var(--t4)">MARKET VALUE</span><span id="pl-deployed">—</span>
+              <span style="color:var(--t4)">DEPLOYED</span><span id="pl-deployed">—</span>
             </div>
             <div style="display:flex;justify-content:space-between;font-size:10px;padding-bottom:8px;border-bottom:1px solid var(--bd)">
               <span style="color:var(--t4)">REBALANCE</span><span>Bi-weekly · every 14 days</span>
@@ -1742,8 +1757,12 @@ function renderOverview(m,r,p){
   txt('pf-date',p.last_rebalance||'—');
   const _rrEl=$('pl-rank-rebal-date');
   if(_rrEl){const _rd=p.last_rebalance||'';if(_rd){const _rp=_rd.split('-');_rrEl.textContent=_rp.length===3?`${_rp[1]}/${_rp[2]}/${_rp[0]}`:_rd;}else{_rrEl.textContent='—';}}
+  const _ovPortVal=m.portfolio_value||100000;
+  const eqOvEl=$('pf-equity');if(eqOvEl){eqOvEl.textContent=fmt$(_ovPortVal);eqOvEl.style.color=_ovPortVal>=100000?'var(--cyan)':'var(--red)';}
   txt('pf-deployed',fmt$(_ovDeployed));
+  txt('pf-deployed-pct',_ovPortVal>0?Math.round(_ovDeployed/_ovPortVal*100)+'%':'');
   txt('pf-cash',fmt$(_ovCash));
+  txt('pf-cash-pct',_ovPortVal>0?Math.round(_ovCash/_ovPortVal*100)+'%':'');
   // Today P&L
   const _ovTodayPl=m.today_pl!=null?m.today_pl:null;
   const _ovTodayPct=m.today_return_pct!=null?m.today_return_pct:null;
@@ -1837,10 +1856,11 @@ function renderPortfolio(m,p){
 
   // Capital card
   txt('pt-date', p.last_rebalance||'—');
-  const depEl=$('pt-deployed');if(depEl){depEl.textContent=fmt$(deployed);depEl.style.color='var(--cyan)';}
-  txt('pt-deployed-pct','');
+  const eqEl=$('pt-equity');if(eqEl){eqEl.textContent=fmt$(portfolioVal);eqEl.style.color=portfolioVal>=inception?'var(--cyan)':'var(--red)';}
+  const depEl=$('pt-deployed');if(depEl){depEl.textContent=fmt$(deployed);}
+  txt('pt-deployed-pct',portfolioVal>0?Math.round(deployed/portfolioVal*100)+'%':'');
   txt('pt-cash',fmt$(cash));
-  txt('pt-cash-pct','');
+  txt('pt-cash-pct',portfolioVal>0?Math.round(cash/portfolioVal*100)+'%':'');
 
   // Today P&L (field may not exist yet — show n/a)
   const todayPl=m.today_pl!=null?m.today_pl:null;
