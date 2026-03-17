@@ -1,13 +1,13 @@
 {
   "date": "2026-03-17",
-  "portfolio_value": 96799.45,
-  "total_pl": -3200.550000000003,
-  "total_return_pct": -3.200550000000002,
-  "today_pl": -2718.16,
-  "today_return_pct": -2.7313,
+  "portfolio_value": 96903.45,
+  "total_pl": -3096.550000000003,
+  "total_return_pct": -3.096549999999998,
+  "today_pl": -2614.16,
+  "today_return_pct": -2.6268,
   "long_positions": 20,
   "short_positions": 0,
-  "total_long_pl": -3272.56,
+  "total_long_pl": -3168.5699999999997,
   "total_short_pl": 0.0,
   "n_alerts": 1,
   "n_drift_alerts": 0,
@@ -18,7 +18,7 @@
   "live_score": "2/5",
   "weeks_live": 0.14285714285714285,
   "cash": 49975.96,
-  "long_market_value": 46823.49,
+  "long_market_value": 46927.47999999999,
   "spy_price": 670.75,
   "xbi_price": 124.07,
   "spy_inception_price": 662.29,
@@ -41,10 +41,10 @@
       "side": "long",
       "qty": 312.0,
       "avg_cost": 7.9905,
-      "market_value": 2614.56,
-      "unrealized_pl": 121.52,
-      "current_price": 8.38,
-      "unrealized_plpc": 4.87
+      "market_value": 2620.11,
+      "unrealized_pl": 127.07,
+      "current_price": 8.3978,
+      "unrealized_plpc": 5.1
     },
     {
       "ticker": "CMPX",
@@ -141,10 +141,10 @@
       "side": "long",
       "qty": 6422.0,
       "avg_cost": 0.3999,
-      "market_value": 2476.97,
-      "unrealized_pl": -91.19,
-      "current_price": 0.3857,
-      "unrealized_plpc": -3.55
+      "market_value": 2478.89,
+      "unrealized_pl": -89.27,
+      "current_price": 0.386,
+      "unrealized_plpc": -3.48
     },
     {
       "ticker": "AVBP",
@@ -155,6 +155,26 @@
       "unrealized_pl": -96.82,
       "current_price": 24.01,
       "unrealized_plpc": -3.77
+    },
+    {
+      "ticker": "ORGO",
+      "side": "long",
+      "qty": 930.0,
+      "avg_cost": 2.69,
+      "market_value": 2399.4,
+      "unrealized_pl": -102.3,
+      "current_price": 2.58,
+      "unrealized_plpc": -4.09
+    },
+    {
+      "ticker": "HRTX",
+      "side": "long",
+      "qty": 2784.0,
+      "avg_cost": 0.9122,
+      "market_value": 2411.5,
+      "unrealized_pl": -128.09,
+      "current_price": 0.8662,
+      "unrealized_plpc": -5.04
     },
     {
       "ticker": "NGNE",
@@ -171,30 +191,10 @@
       "side": "long",
       "qty": 344.0,
       "avg_cost": 7.4,
-      "market_value": 2408.0,
-      "unrealized_pl": -137.6,
-      "current_price": 7.0,
-      "unrealized_plpc": -5.41
-    },
-    {
-      "ticker": "ORGO",
-      "side": "long",
-      "qty": 930.0,
-      "avg_cost": 2.69,
-      "market_value": 2362.2,
-      "unrealized_pl": -139.5,
-      "current_price": 2.54,
-      "unrealized_plpc": -5.58
-    },
-    {
-      "ticker": "HRTX",
-      "side": "long",
-      "qty": 2784.0,
-      "avg_cost": 0.9122,
-      "market_value": 2341.34,
-      "unrealized_pl": -198.25,
-      "current_price": 0.841,
-      "unrealized_plpc": -7.81
+      "market_value": 2373.6,
+      "unrealized_pl": -172.0,
+      "current_price": 6.9,
+      "unrealized_plpc": -6.76
     },
     {
       "ticker": "CDXS",
@@ -221,10 +221,10 @@
       "side": "long",
       "qty": 595.0,
       "avg_cost": 4.44,
-      "market_value": 708.11,
-      "unrealized_pl": -1933.69,
-      "current_price": 1.1901,
-      "unrealized_plpc": -73.2
+      "market_value": 731.67,
+      "unrealized_pl": -1910.13,
+      "current_price": 1.2297,
+      "unrealized_plpc": -72.3
     }
   ]
 }
