@@ -1,13 +1,13 @@
 {
   "date": "2026-03-23",
-  "portfolio_value": 94905.47,
-  "total_pl": -5094.529999999999,
-  "total_return_pct": -5.094529999999997,
-  "today_pl": 267.69,
-  "today_return_pct": 0.2829,
+  "portfolio_value": 94929.35,
+  "total_pl": -5070.649999999994,
+  "total_return_pct": -5.070649999999999,
+  "today_pl": 291.57,
+  "today_return_pct": 0.3081,
   "long_positions": 20,
   "short_positions": 0,
-  "total_long_pl": -5166.549999999999,
+  "total_long_pl": -5142.66,
   "total_short_pl": 0.0,
   "n_alerts": 0,
   "n_drift_alerts": 0,
@@ -18,7 +18,7 @@
   "live_score": "2/5",
   "weeks_live": 0.0,
   "cash": 48241.3,
-  "long_market_value": 46664.170000000006,
+  "long_market_value": 46688.060000000005,
   "spy_price": 655.37,
   "xbi_price": 121.54,
   "spy_inception_price": 658.27,
@@ -141,10 +141,10 @@
       "side": "long",
       "qty": 166.0,
       "avg_cost": 15.4,
-      "market_value": 2319.02,
-      "unrealized_pl": -237.38,
-      "current_price": 13.97,
-      "unrealized_plpc": -9.29
+      "market_value": 2314.59,
+      "unrealized_pl": -241.81,
+      "current_price": 13.9433,
+      "unrealized_plpc": -9.46
     },
     {
       "ticker": "AVBP",
@@ -165,16 +165,6 @@
       "unrealized_pl": -313.51,
       "current_price": 0.7996,
       "unrealized_plpc": -12.35
-    },
-    {
-      "ticker": "KPTI",
-      "side": "long",
-      "qty": 312.0,
-      "avg_cost": 7.9905,
-      "market_value": 2174.64,
-      "unrealized_pl": -318.4,
-      "current_price": 6.97,
-      "unrealized_plpc": -12.77
     },
     {
       "ticker": "NGNE",
@@ -201,10 +191,20 @@
       "side": "long",
       "qty": 6422.0,
       "avg_cost": 0.3999,
-      "market_value": 2073.02,
-      "unrealized_pl": -495.14,
-      "current_price": 0.3228,
-      "unrealized_plpc": -19.28
+      "market_value": 2183.48,
+      "unrealized_pl": -384.68,
+      "current_price": 0.34,
+      "unrealized_plpc": -14.98
+    },
+    {
+      "ticker": "KPTI",
+      "side": "long",
+      "qty": 312.0,
+      "avg_cost": 7.9905,
+      "market_value": 2082.57,
+      "unrealized_pl": -410.47,
+      "current_price": 6.6749,
+      "unrealized_plpc": -16.46
     },
     {
       "ticker": "CTMX",
@@ -221,10 +221,10 @@
       "side": "long",
       "qty": 1013.0,
       "avg_cost": 3.5611,
-      "market_value": 2238.93,
-      "unrealized_pl": -1368.45,
-      "current_price": 2.2102,
-      "unrealized_plpc": -37.94
+      "market_value": 2248.86,
+      "unrealized_pl": -1358.52,
+      "current_price": 2.22,
+      "unrealized_plpc": -37.66
     }
   ]
 }
