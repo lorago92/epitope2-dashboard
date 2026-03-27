@@ -1,13 +1,13 @@
 {
   "date": "2026-03-27",
-  "portfolio_value": 92005.88,
-  "total_pl": -7994.119999999995,
-  "total_return_pct": -7.9941199999999935,
-  "today_pl": -1644.35,
-  "today_return_pct": -1.7558,
+  "portfolio_value": 92004.39,
+  "total_pl": -7995.610000000001,
+  "total_return_pct": -7.995609999999997,
+  "today_pl": -1645.84,
+  "today_return_pct": -1.7574,
   "long_positions": 20,
   "short_positions": 0,
-  "total_long_pl": -8066.14,
+  "total_long_pl": -8067.63,
   "total_short_pl": 0.0,
   "n_alerts": 0,
   "n_drift_alerts": 0,
@@ -18,7 +18,7 @@
   "live_score": "2/5",
   "weeks_live": 0.5714285714285714,
   "cash": 48241.3,
-  "long_market_value": 43764.58000000001,
+  "long_market_value": 43763.090000000004,
   "spy_price": 634.04,
   "xbi_price": 119.41,
   "spy_inception_price": 658.27,
@@ -127,6 +127,16 @@
       "unrealized_plpc": -12.92
     },
     {
+      "ticker": "ORGO",
+      "side": "long",
+      "qty": 930.0,
+      "avg_cost": 2.69,
+      "market_value": 2157.6,
+      "unrealized_pl": -344.1,
+      "current_price": 2.32,
+      "unrealized_plpc": -13.76
+    },
+    {
       "ticker": "HRTX",
       "side": "long",
       "qty": 2784.0,
@@ -157,24 +167,14 @@
       "unrealized_plpc": -14.19
     },
     {
-      "ticker": "ORGO",
-      "side": "long",
-      "qty": 930.0,
-      "avg_cost": 2.69,
-      "market_value": 2139.28,
-      "unrealized_pl": -362.42,
-      "current_price": 2.3003,
-      "unrealized_plpc": -14.49
-    },
-    {
       "ticker": "SGMO",
       "side": "long",
       "qty": 6422.0,
       "avg_cost": 0.3999,
-      "market_value": 2119.9,
-      "unrealized_pl": -448.26,
-      "current_price": 0.3301,
-      "unrealized_plpc": -17.45
+      "market_value": 2118.62,
+      "unrealized_pl": -449.54,
+      "current_price": 0.3299,
+      "unrealized_plpc": -17.5
     },
     {
       "ticker": "CTMX",
@@ -201,10 +201,10 @@
       "side": "long",
       "qty": 1853.0,
       "avg_cost": 1.34,
-      "market_value": 1630.64,
-      "unrealized_pl": -852.38,
-      "current_price": 0.88,
-      "unrealized_plpc": -34.33
+      "market_value": 1612.11,
+      "unrealized_pl": -870.91,
+      "current_price": 0.87,
+      "unrealized_plpc": -35.08
     },
     {
       "ticker": "MAZE",
